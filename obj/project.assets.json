@@ -777,23 +777,23 @@
     ]
   },
   "packageFolders": {
-    "/home/zigmas/.nuget/packages/": {},
-    "/usr/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\Jonas\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/zigmas/Programming/test mono/test mono.csproj",
+      "projectUniqueName": "C:\\Users\\Jonas\\Desktop\\Sick_game_2-master\\Sick_game_2-master\\test mono.csproj",
       "projectName": "test mono",
-      "projectPath": "/home/zigmas/Programming/test mono/test mono.csproj",
-      "packagesPath": "/home/zigmas/.nuget/packages/",
-      "outputPath": "/home/zigmas/Programming/test mono/obj/",
+      "projectPath": "C:\\Users\\Jonas\\Desktop\\Sick_game_2-master\\Sick_game_2-master\\test mono.csproj",
+      "packagesPath": "C:\\Users\\Jonas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Jonas\\Desktop\\Sick_game_2-master\\Sick_game_2-master\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/home/zigmas/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Jonas\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"

@@ -14,7 +14,7 @@ namespace Game1000
         Camera camera;
         List<Player> players;
         Arena arena;
-        
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -28,7 +28,7 @@ namespace Game1000
 
         protected override void Initialize()
         {
-            
+
             base.Initialize();
         }
 

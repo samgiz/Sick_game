@@ -5,74 +5,59 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game1000
 {
-    public class Player
+    public class Player : GameObject
     {
-        public const float radius = 32;
-        public Vector2 position, velocity;
-        public bool isAlive;
-        private const float maxSpeed = 500, accel = 500;
-        private Vector2 origin;
-        private Texture2D image;
-        private float scale;
+        public readonly float mass;
+        private const float maxMomentum = 500000, force = 500000;
         private Keys up, down, left, right;
-        private Color color;
 
-        public Player(Vector2 position, Keys up, Keys down, Keys left, Keys right, Color color, ContentManager Content)
+        public Player(Vector2 position, float radius, Keys up, Keys down, Keys left, Keys right, Color color, ContentManager Content)
+            : base(position, Vector2.Zero, radius, color, Content)
         {
-            this.position = position;
             this.up = up;
             this.down = down;
             this.left = left;
             this.right = right;
-            this.color = color;
+            mass = radius * radius;
             isAlive = true;
             velocity = Vector2.Zero;
-            image = Content.Load<Texture2D>("disk");
-            origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
-            scale = 2 * radius / image.Width;
         }
 
-        public void Update(float elapsed, float arenaRadius)
+        public new void Update(float elapsed, float arenaRadius)
         {
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(up))
-                velocity.Y -= accel * elapsed;
+                velocity.Y -= force * elapsed / mass;
             if (keyState.IsKeyDown(down))
-                velocity.Y += accel * elapsed;
+                velocity.Y += force * elapsed / mass;
             if (keyState.IsKeyDown(left))
-                velocity.X -= accel * elapsed;
+                velocity.X -= force * elapsed / mass;
             if (keyState.IsKeyDown(right))
-                velocity.X += accel * elapsed;
+                velocity.X += force * elapsed / mass;
 
-            if (velocity.Length() > maxSpeed)
+            if (velocity.Length() > maxMomentum / mass)
             {
                 velocity.Normalize();
-                velocity *= maxSpeed;
+                velocity *= maxMomentum / mass;
             }
 
-            position += velocity * elapsed;
-
-            if (position.Length() > arenaRadius + radius)
-                isAlive = false;
+            base.Update(elapsed, arenaRadius);
         }
 
         public static void Collide(Player player1, Player player2)
         {
-            if (Vector2.Distance(player1.position, player2.position) >= 2 * radius)
+            if (Vector2.Distance(player1.position, player2.position) >= player1.radius + player2.radius)
                 return;
-            Vector2 center = (player1.position + player2.position) / 2, direction1 = player1.position - center, direction2 = player2.position - center;
-            direction1.Normalize();
-            direction2.Normalize();
-            player1.position = center + direction1 * radius;
-            player2.position = center + direction2 * radius;
-            float importnantSpeed1 = -Vector2.Dot(direction1, player1.velocity), importantSpeed2 = -Vector2.Dot(direction2, player2.velocity);
-            player1.velocity += (importnantSpeed1 + importantSpeed2) * direction1;
-            player2.velocity += (importnantSpeed1 + importantSpeed2) * direction2;
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(image, position, null, color, 0, origin, scale, SpriteEffects.None, 0);
+            Vector2 center = (player1.position * player1.mass + player2.position * player2.mass) / (player1.mass + player2.mass), direction = player1.position - player2.position;
+            direction.Normalize();
+            float reducedMass = player1.mass * player2.mass / (player1.mass + player2.mass);
+            Vector2 positionExchange = reducedMass * (player1.radius + player2.radius) * direction;
+            player1.position = center + positionExchange / player1.mass;
+            player2.position = center - positionExchange / player2.mass;
+            float importnantSpeed1 = Vector2.Dot(direction, player1.velocity), importantSpeed2 = Vector2.Dot(direction, player2.velocity);
+            Vector2 momentumExchange = reducedMass * 2 * (importantSpeed2 - importnantSpeed1) * direction;
+            player1.velocity += momentumExchange / player1.mass;
+            player2.velocity -= momentumExchange / player2.mass;
         }
     }
 }

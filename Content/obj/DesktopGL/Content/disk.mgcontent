@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>/home/zigmas/Programming/test mono/Content/disk.png</SourceFile>
-  <SourceTime>2019-08-18T12:48:29+03:00</SourceTime>
-  <DestFile>/home/zigmas/Programming/test mono/Content/bin/DesktopGL/Content/disk.xnb</DestFile>
-  <DestTime>2019-08-22T16:46:23+03:00</DestTime>
+  <SourceFile>C:/Users/Jonas/Desktop/Sick_game_2-master/Sick_game_2-master/Content/disk.png</SourceFile>
+  <SourceTime>2019-09-03T11:12:07.5695974+03:00</SourceTime>
+  <DestFile>C:/Users/Jonas/Desktop/Sick_game_2-master/Sick_game_2-master/Content/bin/DesktopGL/Content/disk.xnb</DestFile>
+  <DestTime>2019-09-03T11:21:43.406449+03:00</DestTime>
   <Importer>TextureImporter</Importer>
-  <ImporterTime>2018-01-13T19:18:14+02:00</ImporterTime>
+  <ImporterTime>2018-01-13T19:18:24+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
-  <ProcessorTime>2018-01-13T19:18:14+02:00</ProcessorTime>
+  <ProcessorTime>2018-01-13T19:18:24+02:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>255,0,255,255</Value>
