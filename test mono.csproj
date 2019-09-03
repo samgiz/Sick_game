@@ -17,5 +17,7 @@
     <Content Include="Arena.cs" />
     <Content Include=".vscode\launch.json" />
     <Content Include="Content\Content.mgcb" />
+    <Content Include="GameObject.cs" />
+    <Content Include="Bullet.cs" />
   </ItemGroup>
 </Project>
