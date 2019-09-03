@@ -18,61 +18,48 @@
       "MonoGame.Content.Builder/3.7.0.4": {},
       "MonoGame.Framework.DesktopGL.Core/3.7.0.7": {
         "runtime": {
-          "lib/netstandard2.0/MonoGame.Framework.dll": {
-            "assemblyVersion": "3.7.0.7",
-            "fileVersion": "3.7.0.7"
-          }
+          "lib/netstandard2.0/MonoGame.Framework.dll": {}
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/libSDL2-2.so": {
             "rid": "linux-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/linux-x64/native/libopenal.so": {
             "rid": "linux-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/linux-x86/native/libSDL2-2.so": {
             "rid": "linux-x86",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/linux-x86/native/libopenal.so": {
             "rid": "linux-x86",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/osx/native/libSDL2-2.dylib": {
             "rid": "osx",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/osx/native/libopenal.dylib": {
             "rid": "osx",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/win-x64/native/libSDL2-2.dll": {
             "rid": "win-x64",
-            "assetType": "native",
-            "fileVersion": "2.0.5.0"
+            "assetType": "native"
           },
           "runtimes/win-x64/native/libopenal.dll": {
             "rid": "win-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           },
           "runtimes/win-x86/native/libSDL2-2.dll": {
             "rid": "win-x86",
-            "assetType": "native",
-            "fileVersion": "2.0.5.0"
+            "assetType": "native"
           },
           "runtimes/win-x86/native/libopenal.dll": {
             "rid": "win-x86",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "assetType": "native"
           }
         }
       }

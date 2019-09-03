@@ -39,8 +39,8 @@ namespace Game1000
             //for (int i = 0; i < 20; i++)
             //    for (int j = 0; j < 10; j++)
             //        players.Add(new Player(new Vector2(100 * (i + 1), 100 * (j + 1)), Keys.I, Keys.K, Keys.J, Keys.L, Color.Yellow, Content));
-            players.Add(new Player(new Vector2(100, 100), Keys.Up, Keys.Down, Keys.Left, Keys.Right, Color.Red, Content));
-            players.Add(new Player(new Vector2(-100, -100), Keys.W, Keys.S, Keys.A, Keys.D, Color.Green, Content));
+            players.Add(new Player(new Vector2(100, 100), 32, Keys.Up, Keys.Down, Keys.Left, Keys.Right, Color.Red, Content));
+            players.Add(new Player(new Vector2(-100, -100), 64, Keys.W, Keys.S, Keys.A, Keys.D, Color.Green, Content));
             arena = new Arena(Color.White, Content);
             camera = new Camera(screenWidth, screenHeight);
         }

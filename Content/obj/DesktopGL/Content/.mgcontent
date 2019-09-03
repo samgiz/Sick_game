@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Jonas/Desktop/Sick_game_2-master/Sick_game_2-master/Content/big disk.png</File>
-    <File>C:/Users/Jonas/Desktop/Sick_game_2-master/Sick_game_2-master/Content/disk.png</File>
+    <File>/home/zigmas/Programming/test mono/Content/big disk.png</File>
+    <File>/home/zigmas/Programming/test mono/Content/disk.png</File>
   </SourceFiles>
 </SourceFileCollection>
