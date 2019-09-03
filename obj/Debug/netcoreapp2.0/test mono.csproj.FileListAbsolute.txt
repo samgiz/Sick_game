@@ -1,0 +1,13 @@
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/test mono.deps.json
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/test mono.runtimeconfig.json
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/test mono.runtimeconfig.dev.json
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/test mono.dll
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/test mono.pdb
+/home/zigmas/Programming/test mono/obj/Debug/netcoreapp2.0/test mono.csproj.CoreCompileInputs.cache
+/home/zigmas/Programming/test mono/obj/Debug/netcoreapp2.0/test mono.AssemblyInfoInputs.cache
+/home/zigmas/Programming/test mono/obj/Debug/netcoreapp2.0/test mono.AssemblyInfo.cs
+/home/zigmas/Programming/test mono/obj/Debug/netcoreapp2.0/test mono.dll
+/home/zigmas/Programming/test mono/obj/Debug/netcoreapp2.0/test mono.pdb
+/home/zigmas/Programming/test mono/obj/Debug/netcoreapp2.0/test mono.csprojResolveAssemblyReference.cache
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/Content/big disk.xnb
+/home/zigmas/Programming/test mono/bin/Debug/netcoreapp2.0/Content/disk.xnb
