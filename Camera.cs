@@ -15,7 +15,7 @@ namespace Game1000
 
         public void BeginDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, C.transform);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, C.transform);
         }
     }
 }

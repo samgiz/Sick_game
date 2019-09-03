@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game1000
@@ -9,9 +8,9 @@ namespace Game1000
         public readonly float radius;
         public Vector2 position, velocity;
         public bool isAlive;
-        protected readonly Vector2 origin;
-        protected readonly Texture2D image;
-        protected readonly float scale;
+        public readonly Vector2 origin;
+        public readonly Texture2D image;
+        public readonly float scale;
         protected readonly Color color;
 
         public GameObject(Vector2 position, Vector2 velocity, float radius, Color color)
@@ -37,9 +36,12 @@ namespace Game1000
         public static bool IfIntersects(GameObject object1, GameObject object2)
             => Vector2.Distance(object1.position, object2.position) < object1.radius + object2.radius;
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, bool isInvisible = false)
         {
-            spriteBatch.Draw(image, position, null, color, 0, origin, scale, SpriteEffects.None, 0);
+            Color curColor = color;
+            if (isInvisible)
+                curColor *= 0.5f;
+            spriteBatch.Draw(image, position, null, curColor, 0, origin, scale, SpriteEffects.None, 0);
         }
     }
 }

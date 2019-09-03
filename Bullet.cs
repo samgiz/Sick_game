@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 
 namespace Game1000
 {
@@ -20,8 +19,13 @@ namespace Game1000
 
         public static void Collide(Player player, Bullet bullet)
         {
-            if (!GameObject.IfIntersects(player, bullet))
+            if (!GameObject.IfIntersects(player, bullet) || player.isInvisible)
                 return;
+            if (player.wasInvisible)
+            {
+                player.isAlive = false;
+                bullet.isAlive = false;
+            }
             Vector2 direction = player.position - bullet.position;
             direction.Normalize();
             player.velocity += direction * impactForce / player.mass;
