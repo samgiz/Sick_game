@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Jonas/Desktop/Sick_game_2-master/Sick_game_2-master/Content/big disk.png</SourceFile>
+  <SourceFile>C:/Users/Jonas/Desktop/Sick_game_2/Content/big disk.png</SourceFile>
   <SourceTime>2019-09-03T11:12:07.5539767+03:00</SourceTime>
-  <DestFile>C:/Users/Jonas/Desktop/Sick_game_2-master/Sick_game_2-master/Content/bin/DesktopGL/Content/big disk.xnb</DestFile>
-  <DestTime>2019-09-03T11:21:43.3625999+03:00</DestTime>
+  <DestFile>C:/Users/Jonas/Desktop/Sick_game_2/Content/bin/DesktopGL/Content/big disk.xnb</DestFile>
+  <DestTime>2019-09-03T11:43:09.3108673+03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-01-13T19:18:24+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

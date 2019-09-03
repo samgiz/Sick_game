@@ -10,20 +10,19 @@ namespace Game1000
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        int screenWidth, screenHeight;
         Camera camera;
         List<Player> players;
+        List<Bullet> bullets;
         Arena arena;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = C.screenWidth;
+            graphics.PreferredBackBufferHeight = C.screenHeight;
+            graphics.IsFullScreen = false;
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()
@@ -35,14 +34,16 @@ namespace Game1000
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            C.Content = Content;
             players = new List<Player>();
             //for (int i = 0; i < 20; i++)
             //    for (int j = 0; j < 10; j++)
-            //        players.Add(new Player(new Vector2(100 * (i + 1), 100 * (j + 1)), Keys.I, Keys.K, Keys.J, Keys.L, Color.Yellow, Content));
-            players.Add(new Player(new Vector2(100, 100), Keys.Up, Keys.Down, Keys.Left, Keys.Right, Color.Red, Content));
-            players.Add(new Player(new Vector2(-100, -100), Keys.W, Keys.S, Keys.A, Keys.D, Color.Green, Content));
-            arena = new Arena(Color.White, Content);
-            camera = new Camera(screenWidth, screenHeight);
+            //        players.Add(new Player(new Vector2(100 * (i + 1), 100 * (j + 1)), Keys.I, Keys.K, Keys.J, Keys.L, Color.Yellow));
+            players.Add(new Player(new Vector2(100, 100), 32, Keys.Up, Keys.Down, Keys.Left, Keys.Right, Color.Red));
+            players.Add(new Player(new Vector2(-100, -100), 64, Keys.W, Keys.S, Keys.A, Keys.D, Color.Green));
+            bullets = new List<Bullet>();
+            arena = new Arena(Color.White);
+            camera = new Camera();
         }
 
         protected override void UnloadContent()
@@ -60,12 +61,30 @@ namespace Game1000
                     Player.Collide(players[i], players[j]);
 
             foreach (Player player in players)
-                player.Update(elapsed, arena.radius);
+                foreach (Bullet bullet in bullets)
+                    Bullet.Collide(player, bullet);
+
+            for (int i = 0; i < bullets.Count; i++)
+                for (int j = 0; j < i; j++)
+                    Bullet.Collide(bullets[i], bullets[j]);
+
+            foreach (Player player in players)
+                player.Update(elapsed, arena.radius, bullets);
+
+            foreach (Bullet bullet in bullets)
+                bullet.Update(elapsed, arena.radius);
 
             for (int i = 0; i < players.Count; i++)
                 if (!players[i].isAlive)
                 {
                     players.RemoveAt(i);
+                    i--;
+                }
+
+            for (int i = 0; i < bullets.Count; i++)
+                if (!bullets[i].isAlive)
+                {
+                    bullets.RemoveAt(i);
                     i--;
                 }
 
@@ -84,6 +103,9 @@ namespace Game1000
 
             foreach (Player player in players)
                 player.Draw(spriteBatch);
+
+            foreach (Bullet bullet in bullets)
+                bullet.Draw(spriteBatch);
 
             spriteBatch.End();
 

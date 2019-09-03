@@ -783,11 +783,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jonas\\Desktop\\Sick_game_2-master\\Sick_game_2-master\\test mono.csproj",
+      "projectUniqueName": "C:\\Users\\Jonas\\Desktop\\Sick_game_2\\test mono.csproj",
       "projectName": "test mono",
-      "projectPath": "C:\\Users\\Jonas\\Desktop\\Sick_game_2-master\\Sick_game_2-master\\test mono.csproj",
+      "projectPath": "C:\\Users\\Jonas\\Desktop\\Sick_game_2\\test mono.csproj",
       "packagesPath": "C:\\Users\\Jonas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jonas\\Desktop\\Sick_game_2-master\\Sick_game_2-master\\obj\\",
+      "outputPath": "C:\\Users\\Jonas\\Desktop\\Sick_game_2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

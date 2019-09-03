@@ -12,12 +12,12 @@ namespace Game1000
         private Texture2D image;
         private Color color;
 
-        public Arena(Color color, ContentManager Content)
+        public Arena(Color color)
         {
             this.color = color;
             radius = 540;
             decreasePerSec = 3;
-            image = Content.Load<Texture2D>("big disk");
+            image = C.Content.Load<Texture2D>("big disk");
             origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
             scale = 2 * radius / image.Width;
         }

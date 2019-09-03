@@ -5,18 +5,17 @@ namespace Game1000
 {
     public class Camera
     {
-        private Matrix transform;
         private float scale;
 
-        public Camera(int screenWidth, int screenHeight)
+        public Camera()
         {
-            scale = (float)screenHeight / 1080;
-            transform = Matrix.CreateScale(scale) * Matrix.CreateTranslation(screenWidth * 0.5f, screenHeight * 0.5f, 0);
+            scale = (float)C.screenHeight / 1080;
+            C.transform = Matrix.CreateScale(scale) * Matrix.CreateTranslation(C.screenWidth * 0.5f, C.screenHeight * 0.5f, 0);
         }
 
         public void BeginDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, transform);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, C.transform);
         }
     }
 }
