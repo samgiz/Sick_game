@@ -4,7 +4,7 @@ namespace Game1000
 {
     public class Bullet : GameObject
     {
-        private const float impactForce = 1000000;
+        private const float impactForce = 400000;
         public new const float radius = 10;
 
         public Bullet(Vector2 position, Vector2 velocity)
@@ -29,7 +29,8 @@ namespace Game1000
             }
             Vector2 direction = player.position - bullet.position;
             direction.Normalize();
-            player.velocity += direction * impactForce / player.mass;
+            player.velocity -= 2 * direction * Vector2.Dot(player.velocity - bullet.velocity, direction);
+            //player.velocity += direction * impactForce / player.mass;
             bullet.isAlive = false;
         }
 

@@ -24,7 +24,7 @@ namespace Game1000
             this.left = left;
             this.right = right;
 
-            maxMomentum = 500000;
+            maxMomentum = 100000000000;// 500000;
             force = 500000;
             mass = radius * radius;
             maxSpeed = maxMomentum / mass;
