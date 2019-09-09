@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Game1000
@@ -9,7 +10,7 @@ namespace Game1000
     {
         public readonly float mass;
         public bool isInvisible, wasInvisible;
-        private readonly float /*maxMomentum, */force, invisibilityWait, visibilityWait, bulletWait, bulletSpeed;
+        private readonly float maxMomentum, maxSpeed, force, invisibilityWait, visibilityWait, bulletWait, bulletSpeed;
         private const float gravityConst = 100, frictionCoeff = 0.1f, dragCoeff = 0.5f, airDensity = 0.5f;
         private float tillInvisibility, tillBullet;
         private readonly Keys up, down, left, right;
@@ -23,9 +24,10 @@ namespace Game1000
             this.left = left;
             this.right = right;
 
-            //maxMomentum = 500000;
+            maxMomentum = 500000;
             force = 500000;
             mass = radius * radius;
+            maxSpeed = maxMomentum / mass;
             velocity = Vector2.Zero;
 
             this.canBeInvisible = canBeInvisible;
@@ -42,7 +44,7 @@ namespace Game1000
             isAlive = true;
         }
 
-        public void Update(float elapsed, float arenaRadius, List<Bullet> bullets)
+        public void Update(float elapsed, float arenaRadius, List<Bullet> bullets, KeyboardState keyState, MouseState mouseState)
         {
             wasInvisible = isInvisible;
             tillInvisibility -= elapsed;
@@ -50,16 +52,16 @@ namespace Game1000
             {
                 isInvisible = false;
             }
-            if (canBeInvisible && C.IsRightButtonPressed() && tillInvisibility <= 0)
+            if (canBeInvisible && mouseState.RightButton == ButtonState.Pressed && tillInvisibility <= 0)
             {
                 isInvisible = true;
                 tillInvisibility = invisibilityWait;
             }
 
             tillBullet -= elapsed;
-            if (!isInvisible && canShoot && C.IsLeftButtonPressed() && tillBullet <= 0)
+            if (!isInvisible && canShoot && mouseState.LeftButton == ButtonState.Pressed && tillBullet <= 0)
             {
-                Vector2 mouseDir = C.MousePos() - position;
+                Vector2 mouseDir = C.MousePos(mouseState) - position;
                 if (mouseDir == Vector2.Zero)
                     mouseDir = new Vector2(1, 0);
                 else
@@ -68,23 +70,62 @@ namespace Game1000
                 tillBullet = bulletWait;
             }
 
-            if (C.IsKeyDown(up))
-                velocity.Y -= force * elapsed / mass;
-            if (C.IsKeyDown(down))
-                velocity.Y += force * elapsed / mass;
-            if (C.IsKeyDown(left))
-                velocity.X -= force * elapsed / mass;
-            if (C.IsKeyDown(right))
-                velocity.X += force * elapsed / mass;
+            Vector2 accelDir = Vector2.Zero;
+
+            if (keyState.IsKeyDown(up))
+                accelDir.Y--;
+            if (keyState.IsKeyDown(down))
+                accelDir.Y++;
+            if (keyState.IsKeyDown(left))
+                accelDir.X--;
+            if (keyState.IsKeyDown(right))
+                accelDir.X++;
+
+            if (accelDir != Vector2.Zero)
+                accelDir.Normalize();
+
+            Vector2 accel = accelDir * force / mass;
+
+            //Move(elapsed, accel);
+            DeterministicMove(elapsed, accel);
+            base.Update(arenaRadius);
+        }
+
+        public void DeterministicMove(float elapsed, Vector2 accel)
+        {
+            if ((velocity + accel * elapsed).Length() > maxSpeed)
+            {
+                float elapsed1 = 0;
+                if (velocity.Length() < maxSpeed)
+                {
+                    float dotProduct = Vector2.Dot(velocity, accel);
+                    elapsed1 = (-dotProduct + (float)Math.Sqrt(dotProduct * dotProduct - accel.LengthSquared() * (velocity.LengthSquared() - maxSpeed * maxSpeed))) / accel.LengthSquared();
+                    position += velocity * elapsed1 + accel * elapsed1 * elapsed1 / 2;
+                    velocity += accel * elapsed1;
+                }
+                velocity.Normalize();
+                velocity *= maxSpeed;
+                position += velocity * (elapsed - elapsed1);
+            }
+            else
+            {
+                position += velocity * elapsed + accel * elapsed * elapsed / 2;
+                velocity += accel * elapsed;
+            }
 
             //if (velocity.Length() > maxMomentum / mass)
             //{
             //    velocity.Normalize();
             //    velocity *= maxMomentum / mass;
             //}
+        }
 
+        public void Move(float elapsed, Vector2 accel)
+        {
+            velocity += accel * elapsed;
             Vector2 direction = velocity;
-            direction.Normalize();
+            if (direction != Vector2.Zero)
+                direction.Normalize();
             float speed = velocity.Length(),
                   maxFriction = mass * gravityConst * frictionCoeff,
                   drag = airDensity * speed * speed * dragCoeff * radius,
@@ -93,8 +134,7 @@ namespace Game1000
                 velocity -= maxVelReduction * direction;
             else
                 velocity = Vector2.Zero;
-
-            base.Update(elapsed, arenaRadius);
+            position += velocity * elapsed;
         }
 
         public static void Collide(Player player1, Player player2)

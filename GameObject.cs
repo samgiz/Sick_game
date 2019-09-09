@@ -25,13 +25,17 @@ namespace Game1000
             scale = 2 * radius / image.Width;
         }
 
-        protected void Update(float elapsed, float arenaRadius)
+        protected void Update(float arenaRadius)
         {
-            position += velocity * elapsed;
-
             if (position.Length() > arenaRadius + radius)
                 isAlive = false;
         }
+
+        //protected void Update(float elapsed, float arenaRadius)
+        //{
+        //    position += velocity * elapsed;
+        //    Update(arenaRadius);
+        //}
 
         public static bool IfIntersects(GameObject object1, GameObject object2)
             => Vector2.Distance(object1.position, object2.position) < object1.radius + object2.radius;

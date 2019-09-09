@@ -16,7 +16,7 @@ namespace Game1000
         {
             this.color = color;
             radius = 540;
-            decreasePerSec = 3;
+            decreasePerSec = 10;
             image = C.Content.Load<Texture2D>("big disk");
             origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
             scale = 2 * radius / image.Width;
