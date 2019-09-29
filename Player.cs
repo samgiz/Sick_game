@@ -15,10 +15,13 @@ namespace Game1000
         private float tillInvisibility, tillBullet;
         private readonly Keys up, down, left, right;
         private readonly bool canBeInvisible, canShoot;
+        private Controls controls;
 
-        public Player(Vector2 position, float radius, Keys up, Keys down, Keys left, Keys right, Color color, bool canBeInvisible, bool canShoot)
+        public Player(Controls controls, Vector2 position, float radius, Keys up, Keys down, Keys left, Keys right, Color color, bool canBeInvisible, bool canShoot)
             : base(position, Vector2.Zero, radius, color)
         {
+            this.controls = controls;
+
             this.up = up;
             this.down = down;
             this.left = left;
@@ -44,8 +47,10 @@ namespace Game1000
             isAlive = true;
         }
 
-        public void Update(float elapsed, float arenaRadius, List<Bullet> bullets, KeyboardState keyState, MouseState mouseState)
+        public void Update(float elapsed, float arenaRadius, List<Bullet> bullets)
         {
+            KeyboardState keyState = controls.KeyboardState;
+            MouseState mouseState = controls.MouseState;
             wasInvisible = isInvisible;
             tillInvisibility -= elapsed;
             if (tillInvisibility <= visibilityWait)
