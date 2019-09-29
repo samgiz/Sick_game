@@ -19,12 +19,6 @@ namespace Game1000
 
         public static void LoadImage(string name)
             => Content.Load<Texture2D>(name);
-        //public static bool IsKeyDown(Keys key)
-        //    => Keyboard.GetState().IsKeyDown(key);
-        //public static bool IsLeftButtonPressed()
-        //    => Mouse.GetState().LeftButton == ButtonState.Pressed;
-        //public static bool IsRightButtonPressed()
-        //    => Mouse.GetState().RightButton == ButtonState.Pressed;
         public static Vector2 MousePos(MouseState mouseState)
             => Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(transform));
     }
