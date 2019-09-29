@@ -13,19 +13,13 @@ namespace Game1000
         private readonly float maxMomentum, maxSpeed, force, invisibilityWait, visibilityWait, bulletWait, bulletSpeed;
         private const float gravityConst = 100, frictionCoeff = 0.1f, dragCoeff = 0.5f, airDensity = 0.5f;
         private float tillInvisibility, tillBullet;
-        private readonly Keys up, down, left, right;
         private readonly bool canBeInvisible, canShoot;
         private Controls controls;
 
-        public Player(Controls controls, Vector2 position, float radius, Keys up, Keys down, Keys left, Keys right, Color color, bool canBeInvisible, bool canShoot)
+        public Player(Controls controls, Vector2 position, float radius, Color color, bool canBeInvisible, bool canShoot)
             : base(position, Vector2.Zero, radius, color)
         {
             this.controls = controls;
-
-            this.up = up;
-            this.down = down;
-            this.left = left;
-            this.right = right;
 
             maxMomentum = 500000;
             force = 500000;
@@ -49,24 +43,22 @@ namespace Game1000
 
         public void Update(float elapsed, float arenaRadius, List<Bullet> bullets)
         {
-            KeyboardState keyState = controls.KeyboardState;
-            MouseState mouseState = controls.MouseState;
             wasInvisible = isInvisible;
             tillInvisibility -= elapsed;
             if (tillInvisibility <= visibilityWait)
             {
                 isInvisible = false;
             }
-            if (canBeInvisible && mouseState.RightButton == ButtonState.Pressed && tillInvisibility <= 0)
+            if (canBeInvisible && controls.mouseRight && tillInvisibility <= 0)
             {
                 isInvisible = true;
                 tillInvisibility = invisibilityWait;
             }
 
             tillBullet -= elapsed;
-            if (!isInvisible && canShoot && mouseState.LeftButton == ButtonState.Pressed && tillBullet <= 0)
+            if (!isInvisible && canShoot && controls.mouseLeft && tillBullet <= 0)
             {
-                Vector2 mouseDir = C.MousePos(mouseState) - position;
+                Vector2 mouseDir = controls.mousePos - position;
                 if (mouseDir == Vector2.Zero)
                     mouseDir = new Vector2(1, 0);
                 else
@@ -77,13 +69,13 @@ namespace Game1000
 
             Vector2 accelDir = Vector2.Zero;
 
-            if (keyState.IsKeyDown(up))
+            if (controls.up)
                 accelDir.Y--;
-            if (keyState.IsKeyDown(down))
+            if (controls.down)
                 accelDir.Y++;
-            if (keyState.IsKeyDown(left))
+            if (controls.left)
                 accelDir.X--;
-            if (keyState.IsKeyDown(right))
+            if (controls.right)
                 accelDir.X++;
 
             if (accelDir != Vector2.Zero)
