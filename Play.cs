@@ -18,8 +18,8 @@ namespace Game1000
             //for (int i = 0; i < 20; i++)
             //    for (int j = 0; j < 10; j++)
             //        players.Add(new Player(new Vector2(100 * (i + 1), 100 * (j + 1)), Keys.I, Keys.K, Keys.J, Keys.L, Color.Yellow));
-            players.Add(new Player(new Vector2(100, 0), 32, Keys.Up, Keys.Down, Keys.Left, Keys.Right, Color.Red, true, false));
-            players.Add(new Player(new Vector2(-100, 0), 40, Keys.W, Keys.S, Keys.A, Keys.D, Color.Green, false, true));
+            players.Add(new Player(new LocalControls(), new Vector2(100, 0), 32, Keys.Up, Keys.Down, Keys.Left, Keys.Right, Color.Red, true, false));
+            players.Add(new Player(new LocalControls(), new Vector2(-100, 0), 40, Keys.W, Keys.S, Keys.A, Keys.D, Color.Green, false, true));
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
             camera = new Camera();
@@ -41,7 +41,7 @@ namespace Game1000
                     Bullet.Collide(bullets[i], bullets[j]);
 
             foreach (Player player in players)
-                player.Update(elapsed, arena.radius, bullets, Keyboard.GetState(), Mouse.GetState());
+                player.Update(elapsed, arena.radius, bullets);
 
             foreach (Bullet bullet in bullets)
                 bullet.Update(elapsed, arena.radius);
