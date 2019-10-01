@@ -20,7 +20,7 @@ namespace Game1000
 
         public static void Collide(Player player, DiskObstacle diskObstacle)
         {
-            if (!Disk.IfIntersects(player, diskObstacle) || player.isInvisible)
+            if (!IfIntersects(player, diskObstacle) || player.isInvisible)
                 return;
             if (player.wasInvisible)
             {
@@ -36,7 +36,7 @@ namespace Game1000
 
         public static void Collide(Bullet bullet, DiskObstacle diskObstacle)
         {
-            if (!Disk.IfIntersects(bullet, diskObstacle))
+            if (!IfIntersects(bullet, diskObstacle))
                 return;
 
             bullet.isAlive = false;
