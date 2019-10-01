@@ -10,7 +10,7 @@ namespace Game1000
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Play play;
+        GameState game;
 
         public Game1()
         {
@@ -31,7 +31,7 @@ namespace Game1000
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             C.Content = Content;
-            play = new Play();
+            game = new GameState();
         }
 
         protected override void UnloadContent()
@@ -43,7 +43,7 @@ namespace Game1000
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            play.Update(gameTime);
+            game.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -52,7 +52,7 @@ namespace Game1000
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            play.Draw(spriteBatch);
+            game.Draw(spriteBatch);
             
             base.Draw(gameTime);
         }
