@@ -2,3 +2,7 @@
 	path = logic
 	url = https://github.com/samgiz/Sick_game_logic.git
 	branch = master
+[submodule "networking"]
+	path = networking
+	url = https://github.com/samgiz/Sick_game_networking.git
+	branch = master
