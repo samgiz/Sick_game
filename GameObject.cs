@@ -5,42 +5,29 @@ namespace Game1000
 {
     public class GameObject
     {
-        public readonly float radius;
-        public Vector2 position, velocity;
+        public Vector2 position;
         public bool isAlive;
-        public readonly Vector2 origin;
-        public readonly Texture2D image;
-        public readonly float scale;
+        protected float angle;
+        protected readonly Vector2 origin;
+        protected readonly Texture2D image;
+        protected readonly float scale;
         protected readonly Color color;
 
-        public GameObject(Vector2 position, Vector2 velocity, float radius, Color color)
+        protected GameObject(Vector2 position, Color color, string imageName, float? width = null, float angle = 0)
         {
             this.position = position;
-            this.radius = radius;
+            this.angle = angle;
             this.color = color;
             isAlive = true;
-            this.velocity = velocity;
-            image = C.Content.Load<Texture2D>("disk");
+            image = C.Content.Load<Texture2D>(imageName);
             origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
-            scale = 2 * radius / image.Width;
+            if (width.HasValue)
+                scale = (float)width / image.Width;
+            else
+                scale = 1;
         }
 
-        protected void Update(float arenaRadius)
-        {
-            if (position.Length() > arenaRadius + radius)
-                isAlive = false;
-        }
-
-        //protected void Update(float elapsed, float arenaRadius)
-        //{
-        //    position += velocity * elapsed;
-        //    Update(arenaRadius);
-        //}
-
-        public static bool IfIntersects(GameObject object1, GameObject object2)
-            => Vector2.Distance(object1.position, object2.position) < object1.radius + object2.radius;
-
-        public void Draw(SpriteBatch spriteBatch, bool isInvisible = false)
+        protected void Draw(SpriteBatch spriteBatch, bool isInvisible = false)
         {
             Color curColor = color;
             if (isInvisible)

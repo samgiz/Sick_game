@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 namespace Game1000
 {
-    public class Player : GameObject
+    public class Player : Disk
     {
+        public Vector2 velocity;
         public readonly float mass;
         public bool isInvisible, wasInvisible;
         private readonly float maxMomentum, maxSpeed, force, invisibilityWait, visibilityWait, bulletWait, bulletSpeed;
@@ -16,8 +17,9 @@ namespace Game1000
         private Controls controls;
 
         public Player(Controls controls, Vector2 position, float radius, Color color, bool canBeInvisible, bool canShoot)
-            : base(position, Vector2.Zero, radius, color)
+            : base(position, radius, color)
         {
+            velocity = Vector2.Zero;
             this.controls = controls;
 
             maxMomentum = 500000;
@@ -135,7 +137,7 @@ namespace Game1000
 
         public static void Collide(Player player1, Player player2)
         {
-            if (!GameObject.IfIntersects(player1, player2) || player1.isInvisible || player2.isInvisible)
+            if (!Disk.IfIntersects(player1, player2) || player1.isInvisible || player2.isInvisible)
                 return;
             if (player1.wasInvisible)
             {

@@ -8,12 +8,15 @@ namespace Game1000
     public class GameState
     {
         Camera camera;
+        List<DiskObstacle> diskObstacles;
         List<Player> players;
         List<Bullet> bullets;
         Arena arena;
         
         public GameState()
         {
+            diskObstacles = new List<DiskObstacle>();
+            diskObstacles.Add(new DiskObstacle(new Vector2(0, 100), 20, Color.Black));
             players = new List<Player>();
             //for (int i = 0; i < 20; i++)
             //    for (int j = 0; j < 10; j++)
@@ -37,15 +40,26 @@ namespace Game1000
                 for (int j = 0; j < i; j++)
                     Player.Collide(players[i], players[j]);
 
-            // Check if any player has been shot
+            // Update player positions if they have been shot
             foreach (Player player in players)
                 foreach (Bullet bullet in bullets)
                     Bullet.Collide(player, bullet);
+
+            // Update player positions if they bounce off disk obstacle
+            foreach (Player player in players)
+                foreach (DiskObstacle diskObstacle in diskObstacles)
+                    DiskObstacle.Collide(player, diskObstacle);
+
+            // Check if bullet collides with disk obstacle
+            foreach (Bullet bullet in bullets)
+                foreach (DiskObstacle diskObstacle in diskObstacles)
+                    DiskObstacle.Collide(bullet, diskObstacle);
 
             // Check if any 2 bullets have collided
             for (int i = 0; i < bullets.Count; i++)
                 for (int j = 0; j < i; j++)
                     Bullet.Collide(bullets[i], bullets[j]);
+
 
             // Update the position of each player based on the time that has elapsed
             // TODO: pass the controls of a player as a default  
@@ -88,6 +102,9 @@ namespace Game1000
 
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
+
+            foreach (DiskObstacle diskObstacle in diskObstacles)
+                diskObstacle.Draw(spriteBatch);
 
             spriteBatch.End();
         }
