@@ -1,3 +1,4 @@
 [submodule "logic"]
 	path = logic
 	url = https://github.com/samgiz/Sick_game_logic.git
+	branch = master
