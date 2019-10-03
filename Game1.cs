@@ -74,10 +74,35 @@ namespace Game1000
                         Console.WriteLine(msg.ReadString());
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        
-
                         break;
                     case NetIncomingMessageType.Data:
+                        ServerToClient type = (ServerToClient) msg.ReadByte();
+                        switch(type){
+                            case ServerToClient.NewPlayers:
+                                Console.WriteLine("Received new players");
+                                int n = msg.ReadInt32();
+                                Console.WriteLine(n);
+                                // Parse the n players and add them to the game
+                                for(int i=0; i<n; i++){
+                                    Controls c = new Controls();
+                                    Player p  = new Player(c, 32, Color.Red, false, false);
+                                    long id = msg.ReadInt64();
+                                    int px = msg.ReadInt32();
+                                    int py = msg.ReadInt32();
+                                    int vx = msg.ReadInt32();
+                                    int vy = msg.ReadInt32();
+                                    p.position = new Vector2(px, py);
+                                    p.velocity = new Vector2(vx, vy);
+                                    Console.WriteLine(p.position);
+                                    Console.WriteLine(p.velocity);
+                                    players[id] = p;
+                                    controls[id] = c;
+                                    game.AddPlayer(p);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     default:
                         Console.WriteLine("Unhandled type: " + msg.MessageType);
