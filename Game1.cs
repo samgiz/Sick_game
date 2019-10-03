@@ -27,17 +27,16 @@ namespace Game1000
             graphics.PreferredBackBufferHeight = C.screenHeight;
             graphics.IsFullScreen = true;
             IsMouseVisible = true;
-
-            // Initialize and start server
-            NetPeerConfiguration config = new NetPeerConfiguration("sick_game_server");
-            config.Port = 14242;
-            server = new NetServer(config);
-            server.Start();
         }
 
         protected override void Initialize()
         {
             base.Initialize();
+            // Initialize and start server
+            NetPeerConfiguration config = new NetPeerConfiguration("sick_game");
+            config.Port = 14242;
+            server = new NetServer(config);
+            server.Start();
         }
 
         protected override void LoadContent()
@@ -76,28 +75,47 @@ namespace Game1000
                         Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " " + status + ": " + reason);
 
                         if (status == NetConnectionStatus.Connected){
-                            Console.WriteLine("Remote hail: " + msg.SenderConnection.RemoteHailMessage.ReadString());
                             // Create new controls for person
                             var c = new Controls();
                             controls[msg.SenderConnection.RemoteUniqueIdentifier] = c;
 
-                            // TODO: Inform new player of other players in the game
+                            // Add player to game
+                            Player p = new Player(c, 32, Color.Red, false, false);
+                            players[msg.SenderConnection.RemoteUniqueIdentifier] = p;
+                            game.AddPlayer(p);
+
+                            // Inform new player of other players in the game
                             NetOutgoingMessage om1 = server.CreateMessage();
-                            om1.Write((byte)ServerToClient.NewPlayer);
+                            om1.Write((byte)ServerToClient.NewPlayers);
+
+                            // Encode player position and velocity
+                            // Number of players
+                            om1.Write(1);
+                            // Player identifier
                             om1.Write(msg.SenderConnection.RemoteUniqueIdentifier);
+                            // Player position
+                            om1.Write(p.position.X);
+                            om1.Write(p.position.Y);
+                            // Velocity
+                            om1.Write(p.velocity.X);
+                            om1.Write(p.velocity.Y);
                             List<NetConnection> all = server.Connections; // get copy
 
                             // Remove the sender from recipients
                             all.Remove(msg.SenderConnection);
 
-                            // Send the update to the clients
-                            server.SendMessage(om1, all, NetDeliveryMethod.ReliableOrdered, 0);
 
-                            // TODO: Inform other player of new player
+                            // Send the update to the clients
+                            if(all.Count > 0)
+                                server.SendMessage(om1, all, NetDeliveryMethod.ReliableOrdered, 0);
+
+                            // Inform other player of all new players
                             NetOutgoingMessage om2 = server.CreateMessage();
-                            om2.Write((byte)ServerToClient.ListPlayers);
+                            om2.Write((byte)ServerToClient.NewPlayers);
+
                             // Write the number of players
                             om2.Write(players.Count);
+                            // Encode each player
                             foreach(var item in players)
                             {
                                 om2.Write(item.Key);
@@ -108,10 +126,6 @@ namespace Game1000
                                 om2.Write(pl.velocity.Y);
                             }
                             server.SendMessage(om2, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-
-                            // Add player to game
-                            Player p = new Player(c, 32, Color.Red, false, false);
-                            game.AddPlayer(p);
                         }
 
                         break;
