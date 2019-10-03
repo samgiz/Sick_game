@@ -22,11 +22,8 @@ namespace Game1000
         Death,
         // Used when someone starts a game to inform everyone that the game has started
         StartGame,
-        // Announce to clients that a new player has been added
-        NewPlayer,
-
-        // Send over a list of current players to newly connected player
-        ListPlayers
+        // Announce to clients that new players joined 
+        NewPlayers
     }
     
     // Denotes the control
