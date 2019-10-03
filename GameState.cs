@@ -20,6 +20,8 @@ namespace Game1000
         {
             diskObstacles = new List<DiskObstacle>();
             diskObstacles.Add(new DiskObstacle(new Vector2(0, 100), 20, Color.Black));
+            // TODO: players should be passed as an argument and initialized in the constructor
+            // Adding players one by one is generally undesirable and is only temporary behaviour
             players = new List<Player>();
             //for (int i = 0; i < 20; i++)
             //    for (int j = 0; j < 10; j++)
