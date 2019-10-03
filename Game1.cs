@@ -17,6 +17,7 @@ namespace Game1000
         NetServer server;
 
         Dictionary<long, Controls> controls;
+        Dictionary<long, Player> players;
 
         public Game1()
         {
@@ -44,6 +45,8 @@ namespace Game1000
             spriteBatch = new SpriteBatch(GraphicsDevice);
             C.Content = Content;
             game = new GameState();
+            controls = new Dictionary<long, Controls>();
+            players = new Dictionary<long, Player>();
         }
 
         protected override void UnloadContent()
@@ -77,12 +80,38 @@ namespace Game1000
                             // Create new controls for person
                             var c = new Controls();
                             controls[msg.SenderConnection.RemoteUniqueIdentifier] = c;
-                            // Add player to game
-                            game.AddPlayer(new Player(c, 32, Color.Red, false, false));
 
                             // TODO: Inform new player of other players in the game
+                            NetOutgoingMessage om1 = server.CreateMessage();
+                            om1.Write((byte)ServerToClient.NewPlayer);
+                            om1.Write(msg.SenderConnection.RemoteUniqueIdentifier);
+                            List<NetConnection> all = server.Connections; // get copy
+
+                            // Remove the sender from recipients
+                            all.Remove(msg.SenderConnection);
+
+                            // Send the update to the clients
+                            server.SendMessage(om1, all, NetDeliveryMethod.ReliableOrdered, 0);
 
                             // TODO: Inform other player of new player
+                            NetOutgoingMessage om2 = server.CreateMessage();
+                            om2.Write((byte)ServerToClient.ListPlayers);
+                            // Write the number of players
+                            om2.Write(players.Count);
+                            foreach(var item in players)
+                            {
+                                om2.Write(item.Key);
+                                Player pl = item.Value;
+                                om2.Write(pl.position.X);
+                                om2.Write(pl.position.Y);
+                                om2.Write(pl.velocity.X);
+                                om2.Write(pl.velocity.Y);
+                            }
+                            server.SendMessage(om2, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+
+                            // Add player to game
+                            Player p = new Player(c, 32, Color.Red, false, false);
+                            game.AddPlayer(p);
                         }
 
                         break;
