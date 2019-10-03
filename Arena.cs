@@ -24,7 +24,7 @@ namespace Game1000
 
         public void Update(float elapsed)
         {
-            radius -= decreasePerSec * elapsed;
+            // radius -= decreasePerSec * elapsed;
             if (radius < 0)
                 radius = 0;
             scale = 2 * radius / image.Width;

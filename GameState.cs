@@ -12,6 +12,9 @@ namespace Game1000
         List<Player> players;
         List<Bullet> bullets;
         Arena arena;
+
+        // I'm using this to spawn players in different locations
+        static int tmp = -100;
         
         public GameState()
         {
@@ -21,8 +24,8 @@ namespace Game1000
             //for (int i = 0; i < 20; i++)
             //    for (int j = 0; j < 10; j++)
             //        players.Add(new Player(new Vector2(100 * (i + 1), 100 * (j + 1)), Keys.I, Keys.K, Keys.J, Keys.L, Color.Yellow));
-            players.Add(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), new Vector2(100, 0), 32, Color.Red, true, false));
-            players.Add(new Player(new LocalControls(Keys.W, Keys.A, Keys.S, Keys.D), new Vector2(-100, 0), 40, Color.Green, false, true));
+            // players.Add(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 32, Color.Red, true, false));
+            // players.Add(new Player(new LocalControls(Keys.W, Keys.A, Keys.S, Keys.D), 40, Color.Green, false, true));
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
             camera = new Camera();
@@ -107,6 +110,11 @@ namespace Game1000
                 diskObstacle.Draw(spriteBatch);
 
             spriteBatch.End();
+        }
+        public void AddPlayer(Player p){
+            p.position = new Vector2(tmp, 0);
+            tmp += 200;
+            players.Add(p);
         }
     }
 }

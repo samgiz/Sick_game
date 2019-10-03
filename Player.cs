@@ -16,6 +16,7 @@ namespace Game1000
         private readonly bool canBeInvisible, canShoot;
         private Controls controls;
 
+        // Default contructor
         public Player(Controls controls, Vector2 position, float radius, Color color, bool canBeInvisible, bool canShoot)
             : base(position, radius, color)
         {
@@ -41,6 +42,10 @@ namespace Game1000
             
             isAlive = true;
         }
+
+        // Second constructor in case we don't want to set the coordinates during initialization
+        public Player(Controls controls, float radius, Color color, bool canBeInvisible, bool canShoot)
+            : this(controls, Vector2.Zero, radius, color, canBeInvisible, canShoot){}
 
         public void Update(float elapsed, float arenaRadius, List<Bullet> bullets)
         {
