@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Game1000
 {
@@ -13,5 +14,33 @@ namespace Game1000
         public virtual Vector2 mousePos {get; set;} = Vector2.Zero;
         public virtual bool mouseRight {get; set;} = false;
         public virtual bool mouseLeft {get; set;} = false;
+        public static bool operator ==(Controls lhs, Controls rhs)
+        {
+            // Check if this is the same object
+            if(Object.ReferenceEquals(lhs, rhs))
+                return true;
+            // Check if one of the elements is null
+            if (Object.ReferenceEquals(lhs, null) || Object.ReferenceEquals(rhs, null))
+                return false;
+            // Check if all button states match
+            return lhs.up == rhs.up &&
+                   lhs.left == rhs.left &&
+                   lhs.down == rhs.down &&
+                   lhs.right == rhs.right &&
+                   lhs.mouseLeft == rhs.mouseLeft &&
+                   lhs.mouseRight == rhs.mouseRight;
+        }
+        public static bool operator !=(Controls lhs, Controls rhs){
+            return !(lhs == rhs);
+        }
+        public void AssignValues(Controls c){
+            up = c.up;
+            left = c.left;
+            down = c.down;
+            right = c.right;
+            mouseLeft = c.mouseLeft;
+            mouseRight = c.mouseRight;
+            mousePos = c.mousePos;
+        }
     }
 }
