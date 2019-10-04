@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
+using static Networking.Utilities;
 
 namespace Game1000
 {
@@ -93,12 +94,9 @@ namespace Game1000
                             om1.Write(1);
                             // Player identifier
                             om1.Write(msg.SenderConnection.RemoteUniqueIdentifier);
-                            // Player position
-                            om1.Write(p.position.X);
-                            om1.Write(p.position.Y);
-                            // Velocity
-                            om1.Write(p.velocity.X);
-                            om1.Write(p.velocity.Y);
+                            // Player encoding
+                            EncodePlayer(om1, p);
+
                             List<NetConnection> all = server.Connections; // get copy
 
                             // Remove the sender from recipients
@@ -119,11 +117,8 @@ namespace Game1000
                             foreach(var item in players)
                             {
                                 om2.Write(item.Key);
+                                EncodePlayer(om2, item.Value);
                                 Player pl = item.Value;
-                                om2.Write(pl.position.X);
-                                om2.Write(pl.position.Y);
-                                om2.Write(pl.velocity.X);
-                                om2.Write(pl.velocity.Y);
                             }
                             server.SendMessage(om2, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                         }
@@ -149,42 +144,9 @@ namespace Game1000
                                 Controls control = controls[msg.SenderConnection.RemoteUniqueIdentifier];
                                 
                                 // Read control to be updated
-                                ControlKeys key = (ControlKeys) msg.ReadByte();
-                                om.Write((byte)key);
+                                DecodeControls(msg, control);
+                                EncodeControls(om, control);
 
-                                // Read its state (on or off)
-                                bool state = msg.ReadBoolean();
-                                om.Write(state);
-                                switch(key){
-                                    case ControlKeys.Up:
-                                        control.up = state;
-                                        break;
-                                    case ControlKeys.Down:
-                                        control.down = state;
-                                        break;
-                                    case ControlKeys.Right:
-                                        control.right = state;
-                                        break;
-                                    case ControlKeys.Left:
-                                        control.left = state;
-                                        break;
-                                    // Update state for a mouse click
-                                    default:
-                                        if(key == ControlKeys.MouseLeft){
-                                            control.mouseLeft = state;
-                                        }
-                                        if(key == ControlKeys.MouseRight){
-                                            control.mouseRight = state;
-                                        }
-                                        // Read new mouse position (not sure which is supposed to be x and which y)
-                                        int x = msg.ReadInt32();
-                                        int y = msg.ReadInt32();
-                                        om.Write(x);
-                                        om.Write(y);
-                                        // Set new mouse position
-                                        control.mousePos = new Vector2(x, y);
-                                        break;
-                                }
                                 // TODO: Here I should also add a timestamp to the message
 
                                 // Send the update to all clients
