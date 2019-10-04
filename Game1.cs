@@ -19,6 +19,9 @@ namespace Game1000
         Dictionary<long, Controls> controls;
         Dictionary<long, Player> players;
 
+        LocalControls localControls;
+        Controls previousControls;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -48,7 +51,12 @@ namespace Game1000
             C.Content = Content;
             game = new GameState();
             controls = new Dictionary<long, Controls>();
-            players = new Dictionary<long, Player>();
+            players = new Dictionary<long, Player>(); 
+
+            // Default local controls, uses WASD
+            localControls = new LocalControls();
+            
+            previousControls = new Controls();
         }
 
         protected override void UnloadContent()
@@ -60,7 +68,64 @@ namespace Game1000
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: check for changes to controls here
+            // UP
+            if(localControls.up != previousControls.up){
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte) ClientToServer.UpdateControls);
+                om.Write((byte) ControlKeys.Up);
+                om.Write(localControls.up);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+            previousControls.up = localControls.up;
+            // DOWN
+            if(localControls.down != previousControls.down){
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte) ClientToServer.UpdateControls);
+                om.Write((byte) ControlKeys.Down);
+                om.Write(localControls.down);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+            previousControls.down = localControls.down;
+            // RIGHT
+            if(localControls.right != previousControls.right){
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte) ClientToServer.UpdateControls);
+                om.Write((byte) ControlKeys.Right);
+                om.Write(localControls.right);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+            previousControls.right = localControls.right;
+            // LEFT
+            if(localControls.left != previousControls.left){
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte) ClientToServer.UpdateControls);
+                om.Write((byte) ControlKeys.Left);
+                om.Write(localControls.left);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+            previousControls.left = localControls.left;
+            // LEFT MOUSE
+            if(localControls.mouseLeft != previousControls.mouseLeft){
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte) ClientToServer.UpdateControls);
+                om.Write((byte) ControlKeys.MouseLeft);
+                om.Write(localControls.mouseLeft);
+                om.Write(localControls.mousePos.X);
+                om.Write(localControls.mousePos.Y);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+            previousControls.mouseLeft = localControls.mouseLeft;
+            // RIGHT MOUSE
+            if(localControls.mouseRight != previousControls.mouseRight){
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte) ClientToServer.UpdateControls);
+                om.Write((byte) ControlKeys.MouseRight);
+                om.Write(localControls.mouseRight);
+                om.Write(localControls.mousePos.X);
+                om.Write(localControls.mousePos.Y);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+            previousControls.mouseRight = localControls.mouseRight;
             
             NetIncomingMessage msg;
             while ((msg = client.ReadMessage()) != null)
