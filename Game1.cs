@@ -165,6 +165,43 @@ namespace Game1000
                                     game.AddPlayer(p);
                                 }
                                 break;
+                            case ServerToClient.UpdateControls:
+                            {
+                                Console.WriteLine("Received a control update");
+                                long id = msg.ReadInt64();
+                                ControlKeys key = (ControlKeys) msg.ReadByte();
+                                bool state = msg.ReadBoolean();
+                                Controls control = controls[id];
+                                switch(key){
+                                    case ControlKeys.Up:
+                                        control.up = state;
+                                        break;
+                                    case ControlKeys.Down:
+                                        control.down = state;
+                                        break;
+                                    case ControlKeys.Right:
+                                        control.right = state;
+                                        break;
+                                    case ControlKeys.Left:
+                                        control.left = state;
+                                        break;
+                                    // Update state for a mouse click
+                                    default:
+                                        if(key == ControlKeys.MouseLeft){
+                                            control.mouseLeft = state;
+                                        }
+                                        if(key == ControlKeys.MouseRight){
+                                            control.mouseRight = state;
+                                        }
+                                        // Read new mouse position (not sure which is supposed to be x and which y)
+                                        int x = msg.ReadInt32();
+                                        int y = msg.ReadInt32();
+                                        // Set new mouse position
+                                        control.mousePos = new Vector2(x, y);
+                                        break;
+                                }
+                                break;
+                            }
                             default:
                                 break;
                         }
