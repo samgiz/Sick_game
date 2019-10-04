@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
+using static Networking.Utilities;
 
 namespace Game1000
 {
@@ -68,64 +69,13 @@ namespace Game1000
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // UP
-            if(localControls.up != previousControls.up){
+            if(localControls != previousControls){
                 NetOutgoingMessage om = client.CreateMessage();
                 om.Write((byte) ClientToServer.UpdateControls);
-                om.Write((byte) ControlKeys.Up);
-                om.Write(localControls.up);
+                EncodeControls(om, localControls);
                 client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
             }
-            previousControls.up = localControls.up;
-            // DOWN
-            if(localControls.down != previousControls.down){
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte) ClientToServer.UpdateControls);
-                om.Write((byte) ControlKeys.Down);
-                om.Write(localControls.down);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
-            previousControls.down = localControls.down;
-            // RIGHT
-            if(localControls.right != previousControls.right){
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte) ClientToServer.UpdateControls);
-                om.Write((byte) ControlKeys.Right);
-                om.Write(localControls.right);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
-            previousControls.right = localControls.right;
-            // LEFT
-            if(localControls.left != previousControls.left){
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte) ClientToServer.UpdateControls);
-                om.Write((byte) ControlKeys.Left);
-                om.Write(localControls.left);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
-            previousControls.left = localControls.left;
-            // LEFT MOUSE
-            if(localControls.mouseLeft != previousControls.mouseLeft){
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte) ClientToServer.UpdateControls);
-                om.Write((byte) ControlKeys.MouseLeft);
-                om.Write(localControls.mouseLeft);
-                om.Write(localControls.mousePos.X);
-                om.Write(localControls.mousePos.Y);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
-            previousControls.mouseLeft = localControls.mouseLeft;
-            // RIGHT MOUSE
-            if(localControls.mouseRight != previousControls.mouseRight){
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte) ClientToServer.UpdateControls);
-                om.Write((byte) ControlKeys.MouseRight);
-                om.Write(localControls.mouseRight);
-                om.Write(localControls.mousePos.X);
-                om.Write(localControls.mousePos.Y);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
-            previousControls.mouseRight = localControls.mouseRight;
+            previousControls.AssignValues(localControls);
             
             NetIncomingMessage msg;
             while ((msg = client.ReadMessage()) != null)
@@ -145,6 +95,7 @@ namespace Game1000
                         switch(type){
                             case ServerToClient.NewPlayers:
                                 Console.WriteLine("Received new players");
+                                // Read number of players
                                 int n = msg.ReadInt32();
                                 Console.WriteLine(n);
                                 // Parse the n players and add them to the game
@@ -152,14 +103,7 @@ namespace Game1000
                                     Controls c = new Controls();
                                     Player p  = new Player(c, 32, Color.Red, false, false);
                                     long id = msg.ReadInt64();
-                                    int px = msg.ReadInt32();
-                                    int py = msg.ReadInt32();
-                                    int vx = msg.ReadInt32();
-                                    int vy = msg.ReadInt32();
-                                    p.position = new Vector2(px, py);
-                                    p.velocity = new Vector2(vx, vy);
-                                    Console.WriteLine(p.position);
-                                    Console.WriteLine(p.velocity);
+                                    DecodePlayer(msg, p);
                                     players[id] = p;
                                     controls[id] = c;
                                     game.AddPlayer(p);
@@ -169,37 +113,8 @@ namespace Game1000
                             {
                                 Console.WriteLine("Received a control update");
                                 long id = msg.ReadInt64();
-                                ControlKeys key = (ControlKeys) msg.ReadByte();
-                                bool state = msg.ReadBoolean();
                                 Controls control = controls[id];
-                                switch(key){
-                                    case ControlKeys.Up:
-                                        control.up = state;
-                                        break;
-                                    case ControlKeys.Down:
-                                        control.down = state;
-                                        break;
-                                    case ControlKeys.Right:
-                                        control.right = state;
-                                        break;
-                                    case ControlKeys.Left:
-                                        control.left = state;
-                                        break;
-                                    // Update state for a mouse click
-                                    default:
-                                        if(key == ControlKeys.MouseLeft){
-                                            control.mouseLeft = state;
-                                        }
-                                        if(key == ControlKeys.MouseRight){
-                                            control.mouseRight = state;
-                                        }
-                                        // Read new mouse position (not sure which is supposed to be x and which y)
-                                        int x = msg.ReadInt32();
-                                        int y = msg.ReadInt32();
-                                        // Set new mouse position
-                                        control.mousePos = new Vector2(x, y);
-                                        break;
-                                }
+                                DecodeControls(msg, control);
                                 break;
                             }
                             default:
