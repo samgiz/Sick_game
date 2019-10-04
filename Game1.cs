@@ -138,17 +138,23 @@ namespace Game1000
                             case ClientToServer.UpdateControls:
                                 // Prepare the response message
                                 NetOutgoingMessage om = server.CreateMessage();
+
+                                // Response message type
                                 om.Write((byte)ServerToClient.UpdateControls);
+
+                                // Id of the player whose controls changed
+                                om.Write(msg.SenderConnection.RemoteUniqueIdentifier);
 
                                 // Fetch the controls of the required player
                                 Controls control = controls[msg.SenderConnection.RemoteUniqueIdentifier];
                                 
-                                // Read control to be uppdated
+                                // Read control to be updated
                                 ControlKeys key = (ControlKeys) msg.ReadByte();
                                 om.Write((byte)key);
 
                                 // Read its state (on or off)
                                 bool state = msg.ReadBoolean();
+                                om.Write(state);
                                 switch(key){
                                     case ControlKeys.Up:
                                         control.up = state;
@@ -181,11 +187,8 @@ namespace Game1000
                                 }
                                 // TODO: Here I should also add a timestamp to the message
 
-                                // broadcast controls change to all connections, including sender
-                                List<NetConnection> all = server.Connections; // get copy
-
-                                // Send the update to the clients
-                                server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
+                                // Send the update to all clients
+                                server.SendMessage(om, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
                                 break;
                             // case ClientToServer.StartGame:
                             //     // For each user create a player instance
