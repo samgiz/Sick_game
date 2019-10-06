@@ -12,10 +12,10 @@ namespace Networking{
             msg.Write(p.velocity.Y);
         }
         public static void DecodePlayer(NetIncomingMessage msg, Player p){
-            int px = msg.ReadInt32();
-            int py = msg.ReadInt32();
-            int vx = msg.ReadInt32();
-            int vy = msg.ReadInt32();
+            float px = msg.ReadFloat();
+            float py = msg.ReadFloat();
+            float vx = msg.ReadFloat();
+            float vy = msg.ReadFloat();
             p.position = new Vector2(px, py);
             p.velocity = new Vector2(vx, vy);
         }
