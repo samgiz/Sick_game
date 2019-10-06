@@ -14,9 +14,9 @@ namespace Game1000
         // Message starts with a byte ControlKey
         // Additionally send position and velocity of player?
         UpdateControls,
-        // Updates position of all players, once every unit of time
+        // Updates info of all players, once every unit of time
         // Also include velocity
-        UpdatePosition,
+        UpdatePlayers,
         // Inform players that somebody died
         // Followed by player id
         Death,
@@ -24,21 +24,5 @@ namespace Game1000
         StartGame,
         // Announce to clients that new players joined 
         NewPlayers
-    }
-    
-    // Denotes the control
-    public enum ControlKeys {
-        // One bit that tells whether button pressed or not
-        Up,
-        // One bit that tells whether button pressed or not
-        Left,
-        // One bit that tells whether button pressed or not
-        Down,
-        // One bit that tells whether button pressed or not
-        Right,
-        // Two ints that represent the mouse coordinates
-        MouseRight,
-        // Two ints that represent the mouse coordinates
-        MouseLeft
     }
 }
