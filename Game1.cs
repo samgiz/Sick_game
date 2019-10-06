@@ -43,7 +43,7 @@ namespace Game1000
             client.Start();
 
             // Connect to server
-            client.Connect("localhost", 14242);
+            client.Connect("localhost", 14242, client.CreateMessage());
         }
 
         protected override void LoadContent()
@@ -94,6 +94,7 @@ namespace Game1000
                         ServerToClient type = (ServerToClient) msg.ReadByte();
                         switch(type){
                             case ServerToClient.NewPlayers:
+                            {
                                 Console.WriteLine("Received new players");
                                 // Read number of players
                                 int n = msg.ReadInt32();
@@ -108,6 +109,7 @@ namespace Game1000
                                     controls[id] = c;
                                     game.AddPlayer(p);
                                 }
+                            }
                                 break;
                             case ServerToClient.UpdateControls:
                             {
@@ -115,8 +117,20 @@ namespace Game1000
                                 long id = msg.ReadInt64();
                                 Controls control = controls[id];
                                 DecodeControls(msg, control);
-                                break;
                             }
+                                break;
+                            case ServerToClient.UpdatePlayers:
+                            {
+                                Console.WriteLine("Received players update");
+                                int n = msg.ReadInt32();
+                                Console.WriteLine(n);
+                                for(int i=0; i<n; i++){
+                                    long id = msg.ReadInt64();
+                                    DecodePlayer(msg, players[id]);
+                                    Console.WriteLine(players[id].position);
+                                }
+                            }
+                                break;
                             default:
                                 break;
                         }
