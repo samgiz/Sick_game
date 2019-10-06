@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,6 +21,13 @@ namespace Game1000
         Dictionary<long, Controls> controls;
         Dictionary<long, Player> players;
 
+        // Denotes the max acceptable time interval without updating position of a player
+        // In milliseconds
+        int updateInterval = 250;
+
+        // Denotes the last update of all players positions
+        DateTime lastUpdate;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,6 +44,8 @@ namespace Game1000
             // Initialize and start server
             NetPeerConfiguration config = new NetPeerConfiguration("sick_game");
             config.Port = 14242;
+            // For some reason this does not work when ConnectionApproval is enabled
+            // config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             server = new NetServer(config);
             server.Start();
         }
@@ -47,6 +57,7 @@ namespace Game1000
             game = new GameState();
             controls = new Dictionary<long, Controls>();
             players = new Dictionary<long, Player>();
+            lastUpdate = DateTime.MinValue;
         }
 
         protected override void UnloadContent()
@@ -71,6 +82,7 @@ namespace Game1000
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
+                        Console.WriteLine("Connection change");
 
                         string reason = msg.ReadString();
                         Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " " + status + ": " + reason);
@@ -122,12 +134,11 @@ namespace Game1000
                             }
                             server.SendMessage(om2, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                         }
-
                         break;
                     case NetIncomingMessageType.Data:
                         // Message type sent from client
                         ClientToServer type = (ClientToServer)msg.ReadByte();
-                        Console.WriteLine(msg.SenderConnection.RemoteUniqueIdentifier);
+                        // Console.WriteLine(msg.SenderConnection.RemoteUniqueIdentifier);
                         
                         switch(type){
                             case ClientToServer.UpdateControls:
@@ -147,7 +158,7 @@ namespace Game1000
                                 DecodeControls(msg, control);
                                 EncodeControls(om, control);
 
-                                // TODO: Here I should also add a timestamp to the message
+                                // TODO: add a timestamp to the message
 
                                 // Send the update to all clients
                                 server.SendMessage(om, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
@@ -159,7 +170,6 @@ namespace Game1000
                                 Console.WriteLine("Unknown connection code");
                                 break;
                         }
-
                         
                         break;
                     default:
@@ -167,6 +177,18 @@ namespace Game1000
                         break;
                 }
                 server.Recycle(msg);
+            }
+            // Console.WriteLine((DateTime.Now - lastUpdate).TotalMilliseconds > updateInterval);
+            if(server.Connections.Count > 0 && (DateTime.Now - lastUpdate).TotalMilliseconds > updateInterval){
+                lastUpdate = DateTime.Now;
+                NetOutgoingMessage om = server.CreateMessage();
+                om.Write((byte)ServerToClient.UpdatePlayers);
+                om.Write(players.Count);
+                foreach(var kp in players){
+                    om.Write(kp.Key);
+                    EncodePlayer(om, kp.Value);
+                }
+                server.SendMessage(om, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
             }
 
             // Update game after receiving input changes
