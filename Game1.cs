@@ -32,8 +32,8 @@ namespace Game1000
             spriteBatch = new SpriteBatch(GraphicsDevice);
             C.Content = Content;
             game = new GameState();
-            game.AddPlayer(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 32, Color.Red, true, false));
-            game.AddPlayer(new Player(new LocalControls(Keys.W, Keys.A, Keys.S, Keys.D), 40, Color.Green, false, true));
+            game.AddPlayer(new Player(new LocalControls(), 32, Color.Red, true, false));
+            game.AddPlayer(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 40, Color.Green, false, true));
         }
 
         protected override void UnloadContent()
