@@ -60,13 +60,20 @@ namespace Game1000
 
 
             // Update the position of each player based on the time that has elapsed
-            // TODO: pass the controls of a player as a default  
-            foreach (Player player in players)
-                player.Update(elapsed, arena.radius, bullets);
+            foreach (Player player in players){
+                player.Update(elapsed, bullets);
+                if(!arena.InBounds(player)){
+                    player.isAlive = false;
+                }
+            }
 
             // Update position of bullets
-            foreach (Bullet bullet in bullets)
-                bullet.Update(elapsed, arena.radius);
+            foreach (Bullet bullet in bullets){
+                bullet.Update(elapsed);
+                if(!arena.InBounds(bullet)){
+                    bullet.isAlive = false;
+                }
+            }
 
             // Remove dead players
             for (int i = 0; i < players.Count; i++)

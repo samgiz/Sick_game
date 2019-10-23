@@ -37,12 +37,12 @@ namespace Game1000
         }
 
         // Check whether a point is inside the arena
-        public bool InBounds(Vector2 v){
-            return true;
-        }
+        // public bool InBounds(Vector2 v){
+        //     return true;
+        // }
         // Check whether a game object is in bounds
-        public bool InBounds(GameObject go){
-            return true;
+        public bool InBounds(Disk go){
+            return go.position.Length() - go.radius < radius;
         }
 
         public void AssignPositions(List<Player> ps){

@@ -47,7 +47,7 @@ namespace Game1000
         public Player(Controls controls, float radius, Color color, bool canBeInvisible, bool canShoot)
             : this(controls, Vector2.Zero, radius, color, canBeInvisible, canShoot){}
 
-        public void Update(float elapsed, float arenaRadius, List<Bullet> bullets)
+        public void Update(float elapsed, List<Bullet> bullets)
         {
             wasInvisible = isInvisible;
             tillInvisibility -= elapsed;
@@ -91,7 +91,6 @@ namespace Game1000
 
             //Move(elapsed, accel);
             DeterministicMove(elapsed, accel);
-            base.Update(arenaRadius);
         }
 
         public void DeterministicMove(float elapsed, Vector2 accel)

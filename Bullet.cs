@@ -15,10 +15,9 @@ namespace Game1000
             this.velocity = velocity;
         }
 
-        public void Update(float elapsed, float arenaRadius)
+        public void Update(float elapsed)
         {
             position += velocity * elapsed;
-            base.Update(arenaRadius);
         }
 
         public static void Collide(Player player, Bullet bullet)
