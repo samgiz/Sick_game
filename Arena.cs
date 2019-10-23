@@ -50,6 +50,7 @@ namespace Game1000
                 // Make this assign positions in a circle
                 ps[i].position = new Vector2(-500+i*200, 0);
                 // Override players' speed to avoid strange behaviour
+                ps[i].velocity = Vector2.Zero;
             }
         }
     }
