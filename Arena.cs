@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Game1000
 {
@@ -33,6 +34,23 @@ namespace Game1000
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(image, Vector2.Zero, null, color, 0, origin, scale, SpriteEffects.None, 0);
+        }
+
+        // Check whether a point is inside the arena
+        public bool InBounds(Vector2 v){
+            return true;
+        }
+        // Check whether a game object is in bounds
+        public bool InBounds(GameObject go){
+            return true;
+        }
+
+        public void AssignPositions(List<Player> ps){
+            for(int i = 0; i < ps.Count; i++){
+                // Make this assign positions in a circle
+                ps[i].position = new Vector2(-500+i*200, 0);
+                // Override players' speed to avoid strange behaviour
+            }
         }
     }
 }

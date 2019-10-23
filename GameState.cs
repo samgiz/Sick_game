@@ -12,24 +12,17 @@ namespace Game1000
         List<Player> players;
         List<Bullet> bullets;
         Arena arena;
-
-        // I'm using this to spawn players in different locations
-        static int tmp = -100;
         
-        public GameState()
+        public GameState(List<Player> ps)
         {
             diskObstacles = new List<DiskObstacle>();
             diskObstacles.Add(new DiskObstacle(new Vector2(0, 100), 20, Color.Black));
             // TODO: players should be passed as an argument and initialized in the constructor
             // Adding players one by one is generally undesirable and is only temporary behaviour
-            players = new List<Player>();
-            //for (int i = 0; i < 20; i++)
-            //    for (int j = 0; j < 10; j++)
-            //        players.Add(new Player(new Vector2(100 * (i + 1), 100 * (j + 1)), Keys.I, Keys.K, Keys.J, Keys.L, Color.Yellow));
-            // players.Add(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 32, Color.Red, true, false));
-            // players.Add(new Player(new LocalControls(Keys.W, Keys.A, Keys.S, Keys.D), 40, Color.Green, false, true));
+            players = ps;
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
+            arena.AssignPositions(players);
             camera = new Camera();
         }
 
@@ -114,9 +107,8 @@ namespace Game1000
             spriteBatch.End();
         }
         public void AddPlayer(Player p){
-            p.position = new Vector2(tmp, 0);
-            tmp += 200;
             players.Add(p);
+            arena.AssignPositions(players);
         }
     }
 }
