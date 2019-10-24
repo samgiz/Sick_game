@@ -7,7 +7,6 @@ namespace Game1000
 {
     public class GameState
     {
-        Camera camera;
         List<DiskObstacle> diskObstacles;
         List<Player> players;
         List<Bullet> bullets;
@@ -23,7 +22,6 @@ namespace Game1000
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
             arena.AssignPositions(players);
-            camera = new Camera();
         }
 
          public void Update(GameTime gameTime)
@@ -98,8 +96,6 @@ namespace Game1000
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            camera.BeginDraw(spriteBatch);
-
             arena.Draw(spriteBatch);
 
             foreach (Player player in players)
