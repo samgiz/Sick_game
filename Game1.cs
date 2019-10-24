@@ -27,6 +27,8 @@ namespace Game1000
         // Denotes the last update of all players positions
         DateTime lastUpdate;
 
+        Camera camera;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -53,10 +55,11 @@ namespace Game1000
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             C.Content = Content;
-            game = new GameState();
+            game = new GameState(new List<Player>());
             controls = new Dictionary<long, Controls>();
             players = new Dictionary<long, Player>();
             lastUpdate = DateTime.MinValue;
+            camera = new Camera();
         }
 
         protected override void UnloadContent()
@@ -199,7 +202,7 @@ namespace Game1000
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            camera.BeginDraw(spriteBatch);
             game.Draw(spriteBatch);
             
             base.Draw(gameTime);
