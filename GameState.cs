@@ -29,29 +29,29 @@ namespace Game1000
             // Elapsed time since the last update
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // Update the player positions if they are colliding
+            // Handle collisions of 2 players
             // (Current implementation may cause problems for >2 players)
             // TODO: test this out
             for (int i = 0; i < players.Count; i++)
                 for (int j = 0; j < i; j++)
                     Player.Collide(players[i], players[j]);
 
-            // Update player positions if they have been shot
+            // Handle collisions of Player and Bullet
             foreach (Player player in players)
                 foreach (Bullet bullet in bullets)
                     Bullet.Collide(player, bullet);
 
-            // Update player positions if they bounce off disk obstacle
+            // Handle collisions of Player and DiskObstacle
             foreach (Player player in players)
                 foreach (DiskObstacle diskObstacle in diskObstacles)
                     DiskObstacle.Collide(player, diskObstacle);
 
-            // Check if bullet collides with disk obstacle
+            // Handle collisions of Bullet and DiskObstacle
             foreach (Bullet bullet in bullets)
                 foreach (DiskObstacle diskObstacle in diskObstacles)
                     DiskObstacle.Collide(bullet, diskObstacle);
 
-            // Check if any 2 bullets have collided
+            // Handle collisions of 2 bullets
             for (int i = 0; i < bullets.Count; i++)
                 for (int j = 0; j < i; j++)
                     Bullet.Collide(bullets[i], bullets[j]);
