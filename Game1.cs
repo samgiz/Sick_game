@@ -12,6 +12,8 @@ namespace Game1000
 
         GameState game;
 
+        Camera camera;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -31,7 +33,8 @@ namespace Game1000
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             C.Content = Content;
-            game = new GameState();
+            game = new GameState(new List<Player>());
+            camera = new Camera();
             game.AddPlayer(new Player(new LocalControls(), 32, Color.Red, true, false));
             game.AddPlayer(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 40, Color.Green, false, true));
         }
@@ -53,7 +56,7 @@ namespace Game1000
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            camera.BeginDraw(spriteBatch);
             game.Draw(spriteBatch);
             
             base.Draw(gameTime);
