@@ -15,8 +15,6 @@ namespace Game1000
         private readonly bool canBeInvisible, canShoot;
         private readonly Controls controls;
 
-        //public bool isFrozen;
-
         // Default contructor
         public Player(Controls controls, Vector2 position, float radius, Color color, bool canBeInvisible, bool canShoot)
             : base(position, Vector2.Zero, radius, color)
@@ -42,8 +40,6 @@ namespace Game1000
             isInvisible = false;
             
             isAlive = true;
-
-            //isFrozen = false;
         }
 
         // Second constructor in case we don't want to set the coordinates during initialization
@@ -92,11 +88,7 @@ namespace Game1000
 
             Vector2 accel = accelDir * force / mass;
 
-            //if (!isFrozen)
-            //{
-                //Move(elapsed, accel);
-                DeterministicMove(elapsed, accel);
-            //}
+            DeterministicMove(elapsed, accel);
         }
 
         public void DeterministicMove(float elapsed, Vector2 accel)
@@ -145,32 +137,32 @@ namespace Game1000
             position += velocity * elapsed;
         }
 
-        public static void Collide(Player player1, Player player2)
+        public void Collide(Player player)
         {
-            if (!Disk.IfIntersects(player1, player2) || player1.isInvisible || player2.isInvisible)
+            if (!IfIntersects(player) || isInvisible || player.isInvisible)
                 return;
-            if (player1.wasInvisible)
+            if (wasInvisible)
             {
-                player1.isAlive = false;
-                if (player2.wasInvisible)
-                    player2.isAlive = false;
+                isAlive = false;
+                if (player.wasInvisible)
+                    player.isAlive = false;
                 return;
             }
-            if (player2.wasInvisible)
+            if (player.wasInvisible)
             {
-                player2.isAlive = false;
+                player.isAlive = false;
                 return;
             }
-            Vector2 center = (player1.position * player1.mass + player2.position * player2.mass) / (player1.mass + player2.mass), direction = player1.position - player2.position;
+            Vector2 center = (position * mass + player.position * player.mass) / (mass + player.mass), direction = position - player.position;
             direction.Normalize();
-            float reducedMass = player1.mass * player2.mass / (player1.mass + player2.mass);
-            Vector2 positionExchange = reducedMass * (player1.radius + player2.radius) * direction;
-            player1.position = center + positionExchange / player1.mass;
-            player2.position = center - positionExchange / player2.mass;
-            float importnantSpeed1 = Vector2.Dot(direction, player1.velocity), importantSpeed2 = Vector2.Dot(direction, player2.velocity);
+            float reducedMass = mass * player.mass / (mass + player.mass);
+            Vector2 positionExchange = reducedMass * (radius + player.radius) * direction;
+            position = center + positionExchange / mass;
+            player.position = center - positionExchange / player.mass;
+            float importnantSpeed1 = Vector2.Dot(direction, velocity), importantSpeed2 = Vector2.Dot(direction, player.velocity);
             Vector2 momentumExchange = reducedMass * 2 * (importantSpeed2 - importnantSpeed1) * direction;
-            player1.velocity += momentumExchange / player1.mass;
-            player2.velocity -= momentumExchange / player2.mass;
+            velocity += momentumExchange / mass;
+            player.velocity -= momentumExchange / player.mass;
         }
 
         public void Draw(SpriteBatch spriteBatch)

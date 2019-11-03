@@ -17,33 +17,61 @@ namespace Game1000
             }
         }
 
-        public static void Collide(Player player, Polygon polygon)
+        public void Collide(Player player)
         {
-            int minDistInd = -1;
+            bool ifSideCollides = false;
+            Segment closeSegment = new Segment(Vector2.Zero, Vector2.Zero, Color.Transparent);
 
-            for (int i = 0; i < polygon.segments.Count; i++)
+            foreach (Segment segment in segments)
             {
-                if (Segment.IfCollides(player, polygon.segments[i]))
+                if (segment.IfCollides(player) && (!ifSideCollides || segment.Dist(player) < closeSegment.Dist(player)))
                 {
-                    float dist = Segment.Dist(player, polygon.segments[i]);
-                    if (minDistInd == -1 || dist < Segment.Dist(player, polygon.segments[minDistInd]))
-                    {
-                        minDistInd = i;
-                    }
+                    ifSideCollides = true;
+                    closeSegment = segment;
                 }
             }
 
-            if (minDistInd != -1)
+            if (ifSideCollides)
             {
-                Segment.Collide(player, polygon.segments[minDistInd]);
+                closeSegment.Collide(player);
                 return;
             }
 
-            foreach (Segment segment in polygon.segments)
+            foreach (Segment segment in segments)
             {
-                if (Segment.IfEndpointsCollide(player, segment))
+                if (segment.IfEndpointsCollide(player))
                 {
-                    Segment.CollideEndpoints(player, segment);
+                    segment.CollideEndpoints(player);
+                    break;
+                }
+            }
+        }
+
+        public void Collide(Bullet bullet)
+        {
+            bool ifSideCollides = false;
+            Segment closeSegment = new Segment(Vector2.Zero, Vector2.Zero, Color.Transparent);
+
+            foreach (Segment segment in segments)
+            {
+                if (segment.IfCollides(bullet) && (!ifSideCollides || segment.Dist(bullet) < closeSegment.Dist(bullet)))
+                {
+                    ifSideCollides = true;
+                    closeSegment = segment;
+                }
+            }
+
+            if (ifSideCollides)
+            {
+                closeSegment.Collide(bullet);
+                return;
+            }
+
+            foreach (Segment segment in segments)
+            {
+                if (segment.IfEndpointsCollide(bullet))
+                {
+                    segment.CollideEndpoints(bullet);
                     break;
                 }
             }

@@ -15,9 +15,9 @@ namespace Game1000
             base.Update(arenaRadius);
         }
 
-        public static void Collide(Player player, DiskObstacle diskObstacle)
+        public void Collide(Player player)
         {
-            if (!IfIntersects(player, diskObstacle) || player.isInvisible)
+            if (!IfIntersects(player) || player.isInvisible)
                 return;
             if (player.wasInvisible)
             {
@@ -25,15 +25,15 @@ namespace Game1000
                 return;
             }
 
-            Vector2 direction = player.position - diskObstacle.position;
+            Vector2 direction = player.position - position;
             direction.Normalize();
-            player.position = diskObstacle.position + direction * (player.radius + diskObstacle.radius);
+            player.position = position + direction * (player.radius + radius);
             player.velocity -= 2 * Vector2.Dot(player.velocity, direction) * direction;
         }
 
-        public static void Collide(Bullet bullet, DiskObstacle diskObstacle)
+        public void Collide(Bullet bullet)
         {
-            if (!IfIntersects(bullet, diskObstacle))
+            if (!IfIntersects(bullet))
                 return;
 
             bullet.isAlive = false;

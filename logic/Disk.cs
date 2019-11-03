@@ -21,8 +21,8 @@ namespace Game1000
                 isAlive = false;
         }
 
-        public static bool IfIntersects(Disk disk1, Disk disk2)
-            => Vector2.Distance(disk1.position, disk2.position) < disk1.radius + disk2.radius;
+        public bool IfIntersects(Disk disk)
+            => Vector2.Distance(position, disk.position) < radius + disk.radius;
 
         protected new void Draw(SpriteBatch spriteBatch, bool isInvisible = false)
         {

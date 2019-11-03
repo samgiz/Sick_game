@@ -41,15 +41,15 @@ namespace Game1000
         }
         
         // Returns the distance between line and disk
-        public static float Dist(Disk disk, Segment segment)
+        public float Dist(Disk disk)
         {
             // closest point on the segment to the disk
-            Vector2 closePoint = ClosePoint(disk, segment);
+            Vector2 closePoint = ClosePoint(disk);
 
             return Vector2.Distance(disk.position, closePoint);
         }
 
-        public static bool IfCollides(Disk disk, Segment segment)
+        public bool IfCollides(Disk disk)
         {
             // if disk did not move, it does not collide
             if (disk.velocity == Vector2.Zero)
@@ -62,64 +62,64 @@ namespace Game1000
             moveDir.Normalize();
 
             // perpendicular to segment
-            Vector2 perp = Perp(segment.a);
+            Vector2 perp = Perp(a);
 
             // closest point on the segment to the disk
-            Vector2 closePoint = ClosePoint(disk, segment);
+            Vector2 closePoint = ClosePoint(disk);
 
-            return IsBetween(closePoint, segment.diskObst1.position, segment.diskObst2.position) && Vector2.Distance(closePoint, disk.position) < disk.radius;
+            return IsBetween(closePoint, diskObst1.position, diskObst2.position) && Vector2.Distance(closePoint, disk.position) < disk.radius;
         }
 
-        public static bool IfEndpointsCollide(Disk disk, Segment segment)
+        public bool IfEndpointsCollide(Disk disk)
         {
-            return Disk.IfIntersects(disk, segment.diskObst1) || Disk.IfIntersects(disk, segment.diskObst2);
+            return diskObst1.IfIntersects(disk) || diskObst2.IfIntersects(disk);
         }
 
-        public static void Collide(Player player, Segment segment)
+        public void Collide(Player player)
         {
             // closest point on the segment to the player
-            Vector2 closePoint = ClosePoint(player, segment);
+            Vector2 closePoint = ClosePoint(player);
 
             // closePoint is the one to do all the collision
             DiskObstacle temp = new DiskObstacle(closePoint, 0, Color.Transparent);
 
-            DiskObstacle.Collide(player, temp);
+            temp.Collide(player);
         }
 
-        public static void Collide(Bullet bullet, Segment segment)
+        public void Collide(Bullet bullet)
         {
             bullet.isAlive = false;
         }
         
-        public static void CollideEndpoints(Player player, Segment segment)
+        public void CollideEndpoints(Player player)
         {
-            DiskObstacle.Collide(player, segment.diskObst1);
-            DiskObstacle.Collide(player, segment.diskObst2);
+            diskObst1.Collide(player);
+            diskObst2.Collide(player);
         }
 
-        public static void CollideEndpoints(Bullet bullet, Segment segment)
+        public void CollideEndpoints(Bullet bullet)
         {
-            DiskObstacle.Collide(bullet, segment.diskObst1);
-            DiskObstacle.Collide(bullet, segment.diskObst2);
+            diskObst1.Collide(bullet);
+            diskObst2.Collide(bullet);
         }
 
         // returns vector perpendicular to dir
-        private static Vector2 Perp(Vector2 dir)
+        private Vector2 Perp(Vector2 dir)
         {
             return new Vector2(-dir.Y, dir.X);
         }
 
         // Closest point on the line to the disk
-        private static Vector2 ClosePoint(Disk disk, Segment segment)
+        private Vector2 ClosePoint(Disk disk)
         {
             // perpendicular to segment, 
-            Vector2 perp = Perp(segment.a);
+            Vector2 perp = Perp(a);
 
-            return LineIntersection(segment.a, segment.b, perp, Vector2.Dot(perp, disk.position)).Value;
+            return LineIntersection(a, b, perp, Vector2.Dot(perp, disk.position)).Value;
         }
 
         // returns coordinates where two lines intersect, if they do not intersect, returns null
-        private static Vector2? LineIntersection(Vector2 a, float b, Vector2 c, float d)
+        private Vector2? LineIntersection(Vector2 a, float b, Vector2 c, float d)
         {
             // we are solving system of equations:
             // a.X * x + a.Y * y = b
@@ -135,69 +135,9 @@ namespace Game1000
         }
 
         // returns true if a is between b and c on the line
-        private static bool IsBetween(Vector2 a, Vector2 b, Vector2 c)
+        private bool IsBetween(Vector2 a, Vector2 b, Vector2 c)
         {
             return Vector2.Distance(a, b) < Vector2.Distance(b, c) && Vector2.Distance(a, c) < Vector2.Distance(b, c);
         }
-
-        //public static bool IfCollides(Disk disk, Segment segment)
-        //{
-        //    // if disk did not move, it does not collide
-        //    if (disk.velocity == Vector2.Zero)
-        //    {
-        //        return false;
-        //    }
-
-        //    // direction of disk movement
-        //    Vector2 moveDir = disk.velocity;
-        //    moveDir.Normalize();
-
-        //    //// if disk moves in parrallel, it cannot collide
-        //    //if (Vector2.Dot(moveDir, perp) == 0)
-        //    //{
-        //    //    return false;
-        //    //}
-
-        //    // perpendicular to segment
-        //    Vector2 perp = Perp(segment.a);
-
-        //    // closest point on the segment to the disk
-        //    Vector2 closePoint = ClosePoint(disk, segment);
-
-        //    return IsBetween(closePoint, segment.diskObst1.position, segment.diskObst2.position) && Vector2.Distance(closePoint, disk.position) < disk.radius;
-
-        //    if (IsBetween(closePoint, segment.diskObst1.position, segment.diskObst2.position))
-        //    {
-        //        if (Vector2.Distance(closePoint, disk.position) >= disk.radius)
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (!IfEndpointsCollide(disk, segment))
-        //        {
-        //            return false;
-        //        }
-        //    }
-
-        //    // points on the disk which could collide with segment first
-        //    Vector2 diskPoint = disk.position + disk.radius * perp, diskPoint1 = disk.position - disk.radius * perp;
-
-        //    // diskPoint is the one to collide with segment first
-        //    if (Vector2.Distance(diskPoint1, closePoint) < Vector2.Distance(diskPoint, closePoint))
-        //    {
-        //        diskPoint = diskPoint1;
-        //    }
-
-        //    Vector2? interPoint = LineIntersection(segment.a, segment.b, moveDir, Vector2.Dot(moveDir, diskPoint));
-        //    if (!interPoint.HasValue)
-        //    {
-        //        return false;
-        //    }
-
-        //    return IsBetween(interPoint.Value, segment.diskObst1.position, segment.diskObst2.position);
-        //    //return IsBetween(diskPoint, segment.diskObst1.position, segment.diskObst2.position);
-        //}
     }
 }

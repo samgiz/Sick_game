@@ -10,7 +10,6 @@ namespace Game1000
         List<DiskObstacle> diskObstacles;
         List<Player> players;
         List<Bullet> bullets;
-        List<Segment> segments;
         List<Polygon> polygons;
         Arena arena;
         
@@ -24,7 +23,6 @@ namespace Game1000
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
             arena.AssignPositions(players);
-            segments = new List<Segment>();
             //segments.Add(new Segment(new Vector2(0, 0), new Vector2(100, 100), Color.Black));
             polygons = new List<Polygon>();
             List<Vector2> vertices = new List<Vector2>();
@@ -46,28 +44,40 @@ namespace Game1000
             // TODO: test this out
             for (int i = 0; i < players.Count; i++)
                 for (int j = 0; j < i; j++)
-                    Player.Collide(players[i], players[j]);
+                    players[i].Collide(players[j]);
 
-            // Handle collisions of Player and Bullet
+            // Handle collisions of Player
             foreach (Player player in players)
+            {
+                // Handle collisions with Bullet
                 foreach (Bullet bullet in bullets)
-                    Bullet.Collide(player, bullet);
+                    bullet.Collide(player);
 
-            // Handle collisions of Player and DiskObstacle
-            foreach (Player player in players)
+                // Handle collisions with DiskObstacle
                 foreach (DiskObstacle diskObstacle in diskObstacles)
-                    DiskObstacle.Collide(player, diskObstacle);
+                    diskObstacle.Collide(player);
 
-            // Handle collisions of Bullet and DiskObstacle
-            foreach (Bullet bullet in bullets)
-                foreach (DiskObstacle diskObstacle in diskObstacles)
-                    DiskObstacle.Collide(bullet, diskObstacle);
+                // Handle collisions with Polygon
+                foreach (Polygon polygon in polygons)
+                    polygon.Collide(player);
+            }
 
             // Handle collisions of 2 bullets
             for (int i = 0; i < bullets.Count; i++)
                 for (int j = 0; j < i; j++)
-                    Bullet.Collide(bullets[i], bullets[j]);
+                    bullets[i].Collide(bullets[j]);
 
+            // Handle collisions of Bullet
+            foreach (Bullet bullet in bullets)
+            {
+                // Handle collisions with DiskObstacle
+                foreach (DiskObstacle diskObstacle in diskObstacles)
+                    diskObstacle.Collide(bullet);
+
+                // Handle collisions with Polygon
+                foreach (Polygon polygon in polygons)
+                    polygon.Collide(bullet);
+            }                
 
             // Update the position of each player based on the time that has elapsed
             foreach (Player player in players){
@@ -104,25 +114,6 @@ namespace Game1000
             // Update the arena
             // Currently this means shrinking the size
             arena.Update(elapsed);
-
-            foreach (Polygon polygon in polygons)
-                foreach (Player player in players)
-                    Polygon.Collide(player, polygon);
-
-            foreach (Segment segment in segments)
-            {
-                foreach (Player player in players)
-                {
-                    if (Segment.IfCollides(player, segment))
-                    {
-                        Segment.Collide(player, segment);
-                    }
-                    else
-                    {
-                        Segment.CollideEndpoints(player, segment);
-                    }
-                }
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -140,9 +131,6 @@ namespace Game1000
 
             foreach (Polygon polygon in polygons)
                 polygon.Draw(spriteBatch);
-
-            foreach (Segment segment in segments)
-                segment.Draw(spriteBatch);
 
             spriteBatch.End();
         }

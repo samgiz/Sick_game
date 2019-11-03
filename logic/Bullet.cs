@@ -18,28 +18,28 @@ namespace Game1000
             position += velocity * elapsed;
         }
 
-        public static void Collide(Player player, Bullet bullet)
+        public void Collide(Player player)
         {
-            if (!Disk.IfIntersects(player, bullet) || player.isInvisible)
+            if (!IfIntersects(player) || player.isInvisible)
                 return;
             if (player.wasInvisible)
             {
                 player.isAlive = false;
-                bullet.isAlive = false;
+                isAlive = false;
             }
-            Vector2 direction = player.position - bullet.position;
+            Vector2 direction = player.position - position;
             direction.Normalize();
-            player.velocity -= 2 * direction * Vector2.Dot(player.velocity - bullet.velocity, direction);
+            player.velocity -= 2 * direction * Vector2.Dot(player.velocity - velocity, direction);
             //player.velocity += direction * impactForce / player.mass;
-            bullet.isAlive = false;
+            isAlive = false;
         }
 
-        public static void Collide(Bullet bullet1, Bullet bullet2)
+        public void Collide(Bullet bullet)
         {
-            if (!Disk.IfIntersects(bullet1, bullet2))
+            if (!IfIntersects(bullet))
                 return;
-            bullet1.isAlive = false;
-            bullet2.isAlive = false;
+            isAlive = false;
+            bullet.isAlive = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
