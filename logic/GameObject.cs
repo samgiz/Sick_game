@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Game1000
 {
@@ -19,6 +20,7 @@ namespace Game1000
             this.angle = angle;
             this.color = color;
             isAlive = true;
+            Console.WriteLine(imageName);
             image = C.Content.Load<Texture2D>(imageName);
             origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
             if (width.HasValue)
