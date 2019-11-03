@@ -1,0 +1,3 @@
+:repo:deb https://download.mono-project.com/repo/ubuntu stable-xenial main
+
+mono-devel
