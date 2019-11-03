@@ -10,21 +10,33 @@ namespace Game1000
         List<DiskObstacle> diskObstacles;
         List<Player> players;
         List<Bullet> bullets;
+        List<Segment> segments;
+        List<Polygon> polygons;
         Arena arena;
         
         public GameState(List<Player> ps)
         {
             diskObstacles = new List<DiskObstacle>();
-            diskObstacles.Add(new DiskObstacle(new Vector2(0, 100), 20, Color.Black));
+            //diskObstacles.Add(new DiskObstacle(new Vector2(0, 100), 20, Color.Black));
             // TODO: players should be passed as an argument and initialized in the constructor
             // Adding players one by one is generally undesirable and is only temporary behaviour
             players = ps;
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
             arena.AssignPositions(players);
+            segments = new List<Segment>();
+            //segments.Add(new Segment(new Vector2(0, 0), new Vector2(100, 100), Color.Black));
+            polygons = new List<Polygon>();
+            List<Vector2> vertices = new List<Vector2>();
+            vertices.Add(new Vector2(0, 0));
+            vertices.Add(new Vector2(20, 100));
+            vertices.Add(new Vector2(100, 0));
+            vertices.Add(new Vector2(0, -100));
+            vertices.Add(new Vector2(-100, 0));
+            polygons.Add(new Polygon(vertices, Color.Black));
         }
 
-         public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             // Elapsed time since the last update
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -92,6 +104,25 @@ namespace Game1000
             // Update the arena
             // Currently this means shrinking the size
             arena.Update(elapsed);
+
+            foreach (Polygon polygon in polygons)
+                foreach (Player player in players)
+                    Polygon.Collide(player, polygon);
+
+            foreach (Segment segment in segments)
+            {
+                foreach (Player player in players)
+                {
+                    if (Segment.IfCollides(player, segment))
+                    {
+                        Segment.Collide(player, segment);
+                    }
+                    else
+                    {
+                        Segment.CollideEndpoints(player, segment);
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -107,8 +138,15 @@ namespace Game1000
             foreach (DiskObstacle diskObstacle in diskObstacles)
                 diskObstacle.Draw(spriteBatch);
 
+            foreach (Polygon polygon in polygons)
+                polygon.Draw(spriteBatch);
+
+            foreach (Segment segment in segments)
+                segment.Draw(spriteBatch);
+
             spriteBatch.End();
         }
+
         public void AddPlayer(Player p){
             players.Add(p);
             arena.AssignPositions(players);

@@ -17,7 +17,7 @@ namespace Game1000
             screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         }
 
-        public static void LoadImage(string name)
+        public static Texture2D LoadImage(string name)
             => Content.Load<Texture2D>(name);
         public static Vector2 MousePos(MouseState mouseState)
             => Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(transform));

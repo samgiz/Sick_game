@@ -5,14 +5,12 @@ namespace Game1000
 {
     public class Bullet : Disk
     {
-        public Vector2 velocity;
         private const float impactForce = 1000000;
         public new const float radius = 10;
 
         public Bullet(Vector2 position, Vector2 velocity)
-            : base(position, radius, Color.Black)
+            : base(position, velocity, radius, Color.Black)
         {
-            this.velocity = velocity;
         }
 
         public void Update(float elapsed)

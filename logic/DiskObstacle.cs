@@ -1,15 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Game1000
 {
     public class DiskObstacle : Disk
     {
         public DiskObstacle(Vector2 position, float radius, Color color)
-            : base(position, radius, color)
+            : base(position, Vector2.Zero, radius, color)
         {
         }
 

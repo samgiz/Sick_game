@@ -6,11 +6,13 @@ namespace Game1000
     public class Disk : GameObject
     {
         public readonly float radius;
+        public Vector2 velocity;
 
-        protected Disk(Vector2 position, float radius, Color color)
+        protected Disk(Vector2 position, Vector2 velocity, float radius, Color color)
             : base(position, color, "disk", 2 * radius)
         {
             this.radius = radius;
+            this.velocity = velocity;
         }
 
         protected void Update(float arenaRadius)

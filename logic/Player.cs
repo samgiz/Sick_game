@@ -7,18 +7,19 @@ namespace Game1000
 {
     public class Player : Disk
     {
-        public Vector2 velocity;
         public readonly float mass;
         public bool isInvisible, wasInvisible;
         private readonly float maxMomentum, maxSpeed, force, invisibilityWait, visibilityWait, bulletWait, bulletSpeed;
         private const float gravityConst = 100, frictionCoeff = 0.1f, dragCoeff = 0.5f, airDensity = 0.5f;
         private float tillInvisibility, tillBullet;
         private readonly bool canBeInvisible, canShoot;
-        private Controls controls;
+        private readonly Controls controls;
+
+        //public bool isFrozen;
 
         // Default contructor
         public Player(Controls controls, Vector2 position, float radius, Color color, bool canBeInvisible, bool canShoot)
-            : base(position, radius, color)
+            : base(position, Vector2.Zero, radius, color)
         {
             velocity = Vector2.Zero;
             this.controls = controls;
@@ -41,6 +42,8 @@ namespace Game1000
             isInvisible = false;
             
             isAlive = true;
+
+            //isFrozen = false;
         }
 
         // Second constructor in case we don't want to set the coordinates during initialization
@@ -89,8 +92,11 @@ namespace Game1000
 
             Vector2 accel = accelDir * force / mass;
 
-            //Move(elapsed, accel);
-            DeterministicMove(elapsed, accel);
+            //if (!isFrozen)
+            //{
+                //Move(elapsed, accel);
+                DeterministicMove(elapsed, accel);
+            //}
         }
 
         public void DeterministicMove(float elapsed, Vector2 accel)
