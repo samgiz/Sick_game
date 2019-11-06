@@ -8,7 +8,7 @@ namespace Game1000
     public class Player : Disk
     {
         public readonly float mass;
-        public bool isInvisible, wasInvisible;
+        protected bool wasInvisible;
         private readonly float maxMomentum, maxSpeed, force, invisibilityWait, visibilityWait, bulletWait, bulletSpeed;
         private const float gravityConst = 100, frictionCoeff = 0.1f, dragCoeff = 0.5f, airDensity = 0.5f;
         private float tillInvisibility, tillBullet;
@@ -37,7 +37,6 @@ namespace Game1000
             bulletWait = 0.5f;
             bulletSpeed = 200;
             tillBullet = 0;
-            isInvisible = false;
             
             isAlive = true;
         }
@@ -48,20 +47,20 @@ namespace Game1000
 
         public void Update(float elapsed, List<Bullet> bullets)
         {
-            wasInvisible = isInvisible;
+            wasInvisible = !ifCollides;
             tillInvisibility -= elapsed;
             if (tillInvisibility <= visibilityWait)
             {
-                isInvisible = false;
+                ifCollides = true;
             }
             if (canBeInvisible && controls.mouseRight && tillInvisibility <= 0)
             {
-                isInvisible = true;
+                ifCollides = false;
                 tillInvisibility = invisibilityWait;
             }
 
             tillBullet -= elapsed;
-            if (!isInvisible && canShoot && controls.mouseLeft && tillBullet <= 0)
+            if (ifCollides && canShoot && controls.mouseLeft && tillBullet <= 0)
             {
                 Vector2 mouseDir = controls.mousePos - position;
                 if (mouseDir == Vector2.Zero)
@@ -89,6 +88,15 @@ namespace Game1000
             Vector2 accel = accelDir * force / mass;
 
             DeterministicMove(elapsed, accel);
+        }
+
+        public override void Collide()
+        {
+            if (wasInvisible)
+            {
+                isAlive = false;
+                return;
+            }
         }
 
         public void DeterministicMove(float elapsed, Vector2 accel)
@@ -139,20 +147,9 @@ namespace Game1000
 
         public void Collide(Player player)
         {
-            if (!IfIntersects(player) || isInvisible || player.isInvisible)
+            if (!IfIntersects(player) || !ifCollides || !player.ifCollides)
                 return;
-            if (wasInvisible)
-            {
-                isAlive = false;
-                if (player.wasInvisible)
-                    player.isAlive = false;
-                return;
-            }
-            if (player.wasInvisible)
-            {
-                player.isAlive = false;
-                return;
-            }
+
             Vector2 center = (position * mass + player.position * player.mass) / (mass + player.mass), direction = position - player.position;
             direction.Normalize();
             float reducedMass = mass * player.mass / (mass + player.mass);
@@ -163,11 +160,14 @@ namespace Game1000
             Vector2 momentumExchange = reducedMass * 2 * (importantSpeed2 - importnantSpeed1) * direction;
             velocity += momentumExchange / mass;
             player.velocity -= momentumExchange / player.mass;
+
+            Collide();
+            player.Collide();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch, isInvisible);
+            Draw(spriteBatch, ifCollides);
         }
     }
 }

@@ -3,40 +3,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Game1000
 {
-    public class DiskObstacle : Disk
+    public class DiskObstacle : Disk, Obstacle
     {
         public DiskObstacle(Vector2 position, float radius, Color color)
             : base(position, Vector2.Zero, radius, color)
         {
         }
 
-        public new void Update(float arenaRadius)
+        public void Collide(Disk disk)
         {
-            base.Update(arenaRadius);
-        }
-
-        public void Collide(Player player)
-        {
-            if (!IfIntersects(player) || player.isInvisible)
+            if (!IfIntersects(disk) || !disk.ifCollides)
                 return;
-            if (player.wasInvisible)
-            {
-                player.isAlive = false;
-                return;
-            }
 
-            Vector2 direction = player.position - position;
+            Vector2 direction = disk.position - position;
             direction.Normalize();
-            player.position = position + direction * (player.radius + radius);
-            player.velocity -= 2 * Vector2.Dot(player.velocity, direction) * direction;
-        }
+            disk.position = position + direction * (disk.radius + radius);
+            disk.velocity -= 2 * Vector2.Dot(disk.velocity, direction) * direction;
 
-        public void Collide(Bullet bullet)
-        {
-            if (!IfIntersects(bullet))
-                return;
-
-            bullet.isAlive = false;
+            disk.Collide();
         }
 
         public void Draw(SpriteBatch spriteBatch)

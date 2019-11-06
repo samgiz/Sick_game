@@ -21,18 +21,18 @@ namespace Game1000
             this.color = color;
             isAlive = true;
             Console.WriteLine(imageName);
-            image = C.Content.Load<Texture2D>(imageName);
-            origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
+            image = C.LoadImage(imageName);
+            origin = C.ImageOrigin(image);
             if (width.HasValue)
                 scale = (float)width / image.Width;
             else
                 scale = 1;
         }
 
-        protected void Draw(SpriteBatch spriteBatch, bool isInvisible = false)
+        protected void Draw(SpriteBatch spriteBatch, bool ifCollides = true)
         {
             Color curColor = color;
-            if (isInvisible)
+            if (!ifCollides)
                 curColor *= 0.5f;
             spriteBatch.Draw(image, position, null, curColor, 0, origin, scale, SpriteEffects.None, 0);
         }

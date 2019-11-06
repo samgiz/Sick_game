@@ -13,33 +13,36 @@ namespace Game1000
         {
         }
 
-        public void Update(float elapsed)
+        public new void Update(float elapsed)
         {
             position += velocity * elapsed;
         }
 
+        public override void Collide()
+        {
+            isAlive = false;
+        }
+
         public void Collide(Player player)
         {
-            if (!IfIntersects(player) || player.isInvisible)
+            if (!IfIntersects(player) || !player.ifCollides)
                 return;
-            if (player.wasInvisible)
-            {
-                player.isAlive = false;
-                isAlive = false;
-            }
             Vector2 direction = player.position - position;
             direction.Normalize();
             player.velocity -= 2 * direction * Vector2.Dot(player.velocity - velocity, direction);
             //player.velocity += direction * impactForce / player.mass;
-            isAlive = false;
+
+            Collide();
+            player.Collide();
         }
 
         public void Collide(Bullet bullet)
         {
             if (!IfIntersects(bullet))
                 return;
-            isAlive = false;
-            bullet.isAlive = false;
+
+            Collide();
+            bullet.Collide();
         }
 
         public void Draw(SpriteBatch spriteBatch)

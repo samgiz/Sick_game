@@ -4,77 +4,31 @@ using System.Collections.Generic;
 
 namespace Game1000
 {
-    public class Polygon
+    public class Polygon : Obstacle
     {               
         private readonly List<Segment> segments;
 
-        public Polygon(List<Vector2> vertices, Color color)
+        public Polygon(List<Vector2> vertices, float lineWidth, Color color)
         {
             segments = new List<Segment>();
             for (int i = 0; i < vertices.Count; i++)
             {
-                segments.Add(new Segment(vertices[i], vertices[(i + 1) % vertices.Count], color));
+                segments.Add(new Segment(vertices[i], vertices[(i + 1) % vertices.Count], lineWidth, color));
             }
         }
 
-        public void Collide(Player player)
+        public void Collide(Disk disk)
         {
-            bool ifSideCollides = false;
-            Segment closeSegment = new Segment(Vector2.Zero, Vector2.Zero, Color.Transparent);
-
-            foreach (Segment segment in segments)
+            int closeInd = 0;
+            for (int i = 1; i < segments.Count; i++)
             {
-                if (segment.IfCollides(player) && (!ifSideCollides || segment.Dist(player) < closeSegment.Dist(player)))
+                if (segments[i].Dist(disk) < segments[closeInd].Dist(disk))
                 {
-                    ifSideCollides = true;
-                    closeSegment = segment;
+                    closeInd = i;
                 }
             }
 
-            if (ifSideCollides)
-            {
-                closeSegment.Collide(player);
-                return;
-            }
-
-            foreach (Segment segment in segments)
-            {
-                if (segment.IfEndpointsCollide(player))
-                {
-                    segment.CollideEndpoints(player);
-                    break;
-                }
-            }
-        }
-
-        public void Collide(Bullet bullet)
-        {
-            bool ifSideCollides = false;
-            Segment closeSegment = new Segment(Vector2.Zero, Vector2.Zero, Color.Transparent);
-
-            foreach (Segment segment in segments)
-            {
-                if (segment.IfCollides(bullet) && (!ifSideCollides || segment.Dist(bullet) < closeSegment.Dist(bullet)))
-                {
-                    ifSideCollides = true;
-                    closeSegment = segment;
-                }
-            }
-
-            if (ifSideCollides)
-            {
-                closeSegment.Collide(bullet);
-                return;
-            }
-
-            foreach (Segment segment in segments)
-            {
-                if (segment.IfEndpointsCollide(bullet))
-                {
-                    segment.CollideEndpoints(bullet);
-                    break;
-                }
-            }
+            segments[closeInd].Collide(disk);
         }
 
         public void Draw(SpriteBatch spriteBatch)

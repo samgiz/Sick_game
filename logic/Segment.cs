@@ -4,118 +4,93 @@ using System;
 
 namespace Game1000
 {
-    public class Segment
+    public class Segment : Obstacle
     {
         // line is a.X * x + a.Y * y = b
         // length of a is 1
         private readonly Vector2 a;
         private readonly float b;
-        private readonly DiskObstacle diskObst1, diskObst2;
+        private readonly Vector2 vert1, vert2;
         private readonly Color color;
+        // radius around the line defining the boundary
+        private readonly float radius;
 
         // for drawing
-        private readonly Texture2D image;
-        private readonly Vector2 midPos, origin, scale;
-        private readonly float angle;
+        private readonly Texture2D pixelImage, diskImage;
+        private readonly Vector2 midPos, pixelOrigin, pixelScale, diskOrigin;
+        private readonly float angle, diskScale;
 
-        public Segment(Vector2 pos1, Vector2 pos2, Color color)
+        public Segment(Vector2 vert1, Vector2 vert2, float lineWidth, Color color)
         {
-            diskObst1 = new DiskObstacle(pos1, 0, Color.Transparent);
-            diskObst2 = new DiskObstacle(pos2, 0, Color.Transparent);
-            Vector2 direction = pos1 - pos2;
-            direction.Normalize();
-            a = Perp(direction);
-            b = Vector2.Dot(a, pos1);
+            this.vert1 = vert1;
+            this.vert2 = vert2;
+            radius = lineWidth / 2;
+            // since line is described by a verctor perpendicular to any vectorr along the line
+            a = new Vector2(-(vert1 - vert2).Y, (vert1 - vert2).X);
+            a.Normalize();
+            b = Vector2.Dot(a, vert1);
             this.color = color;
 
-            image = C.LoadImage("pixel");
-            midPos = (pos1 + pos2) / 2;
-            origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
-            scale = new Vector2(1, Vector2.Distance(diskObst1.position, diskObst2.position));
+            pixelImage = C.LoadImage("pixel");
+            pixelOrigin = C.ImageOrigin(pixelImage);
+            midPos = (vert1 + vert2) / 2;
+            pixelScale = new Vector2(lineWidth, Vector2.Distance(vert1, vert2));
             angle = (float)Math.Atan2(a.Y, a.X);
+
+            diskImage = C.LoadImage("disk");
+            diskOrigin = C.ImageOrigin(diskImage);
+            diskScale = 2 * radius / diskImage.Width;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(image, midPos, null, color, angle, origin, scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(pixelImage, midPos, null, color, angle, pixelOrigin, pixelScale, SpriteEffects.None, 0);
+            spriteBatch.Draw(diskImage, vert1, null, color, 0, diskOrigin, diskScale, SpriteEffects.None, 0);
+            spriteBatch.Draw(diskImage, vert2, null, color, 0, diskOrigin, diskScale, SpriteEffects.None, 0);
         }
-        
+
         // Returns the distance between line and disk
         public float Dist(Disk disk)
         {
             // closest point on the segment to the disk
             Vector2 closePoint = ClosePoint(disk);
 
-            return Vector2.Distance(disk.position, closePoint);
+            return Vector2.Distance(disk.position, closePoint) - radius;
         }
 
-        public bool IfCollides(Disk disk)
-        {
-            // if disk did not move, it does not collide
-            if (disk.velocity == Vector2.Zero)
-            {
-                return false;
-            }
-
-            // direction of disk movement
-            Vector2 moveDir = disk.velocity;
-            moveDir.Normalize();
-
-            // perpendicular to segment
-            Vector2 perp = Perp(a);
-
-            // closest point on the segment to the disk
-            Vector2 closePoint = ClosePoint(disk);
-
-            return IsBetween(closePoint, diskObst1.position, diskObst2.position) && Vector2.Distance(closePoint, disk.position) < disk.radius;
-        }
-
-        public bool IfEndpointsCollide(Disk disk)
-        {
-            return diskObst1.IfIntersects(disk) || diskObst2.IfIntersects(disk);
-        }
-
-        public void Collide(Player player)
+        // Handles collision with disk (usually player or bullet)
+        public void Collide(Disk disk)
         {
             // closest point on the segment to the player
-            Vector2 closePoint = ClosePoint(player);
+            Vector2 closePoint = ClosePoint(disk);
 
             // closePoint is the one to do all the collision
-            DiskObstacle temp = new DiskObstacle(closePoint, 0, Color.Transparent);
+            DiskObstacle temp = new DiskObstacle(closePoint, radius, Color.Transparent);
 
-            temp.Collide(player);
-        }
-
-        public void Collide(Bullet bullet)
-        {
-            bullet.isAlive = false;
-        }
-        
-        public void CollideEndpoints(Player player)
-        {
-            diskObst1.Collide(player);
-            diskObst2.Collide(player);
-        }
-
-        public void CollideEndpoints(Bullet bullet)
-        {
-            diskObst1.Collide(bullet);
-            diskObst2.Collide(bullet);
-        }
-
-        // returns vector perpendicular to dir
-        private Vector2 Perp(Vector2 dir)
-        {
-            return new Vector2(-dir.Y, dir.X);
+            temp.Collide(disk);
         }
 
         // Closest point on the line to the disk
         private Vector2 ClosePoint(Disk disk)
         {
             // perpendicular to segment, 
-            Vector2 perp = Perp(a);
+            Vector2 perp = new Vector2(-a.Y, a.X);
 
-            return LineIntersection(a, b, perp, Vector2.Dot(perp, disk.position)).Value;
+            Vector2 closeLinePoint = LineIntersection(a, b, perp, Vector2.Dot(perp, disk.position)).Value;
+
+            if (IsBetween(closeLinePoint, vert1, vert2))
+            {
+                return closeLinePoint;
+            }
+
+            if (Vector2.Distance(disk.position, vert1) < Vector2.Distance(disk.position, vert2))
+            {
+                return vert1;
+            }
+            else
+            {
+                return vert2;
+            }
         }
 
         // returns coordinates where two lines intersect, if they do not intersect, returns null
@@ -125,11 +100,13 @@ namespace Game1000
             // a.X * x + a.Y * y = b
             // c.X * x + c.Y * y = d
             float determinant = a.X * c.Y - a.Y * c.X;
+
             // if they move in parrallel, they do not collide
             if (determinant == 0)
             {
                 return null;
             }
+
             // position of the collision of lines
             return new Vector2(b * c.Y - d * a.Y, d * a.X - b * c.X) / determinant;
         }
