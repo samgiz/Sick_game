@@ -19,16 +19,8 @@ namespace Game1000
 
         public void Collide(Disk disk)
         {
-            int closeInd = 0;
-            for (int i = 1; i < segments.Count; i++)
-            {
-                if (segments[i].Dist(disk) < segments[closeInd].Dist(disk))
-                {
-                    closeInd = i;
-                }
-            }
-
-            segments[closeInd].Collide(disk);
+            foreach (Segment segment in segments)
+                segment.Collide(disk);
         }
 
         public void Draw(SpriteBatch spriteBatch)

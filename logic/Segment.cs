@@ -65,7 +65,7 @@ namespace Game1000
             Vector2 closePoint = ClosePoint(disk);
 
             // closePoint is the one to do all the collision
-            DiskObstacle temp = new DiskObstacle(closePoint, radius, Color.Transparent);
+            Disk temp = new Disk(closePoint, Vector2.Zero, radius, Color.Transparent);
 
             temp.Collide(disk);
         }
