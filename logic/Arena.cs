@@ -9,8 +9,9 @@ namespace Game1000
     {
         public float radius;
         private Vector2 origin;
-        private float scale, decreasePerSec;
-        private Texture2D image;
+        private float scale;
+        private readonly float decreasePerSec;
+        private readonly Texture2D image;
         private Color color;
 
         public Arena(Color color)

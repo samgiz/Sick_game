@@ -13,7 +13,7 @@ namespace Game1000
         private Vector2 velocity;
         private readonly float maxSpeed;
 
-        private const float gravityConst = 100, frictionCoeff = 0.1f, dragCoeff = 0.5f, airDensity = 0.5f;
+        private const float gravityConst = 100, frictionCoeff = 0.001f, dragCoeff = 10f, airDensity = 0.5f;
 
         public Disk(Vector2 position, Vector2 velocity, float radius, Color color, float mass = float.PositiveInfinity)
             : base(position, color, "disk", 2 * radius)
@@ -37,7 +37,8 @@ namespace Game1000
         {
             velocity += force / mass;
             force = Vector2.Zero;
-            ApplyMaxSpeed(elapsed);
+            ApplyDrag(elapsed);
+            //ApplyMaxSpeed();
             position += velocity * elapsed;
         }
 
@@ -48,7 +49,7 @@ namespace Game1000
                 direction.Normalize();
             float speed = velocity.Length(),
                   maxFriction = mass * gravityConst * frictionCoeff,
-                  drag = airDensity * speed * speed * dragCoeff * radius,
+                  drag = airDensity * speed * speed * dragCoeff,// * radius,
                   maxVelReduction = (maxFriction + drag) / mass * elapsed;
             if (speed > maxVelReduction)
                 velocity -= maxVelReduction * direction;
@@ -56,7 +57,7 @@ namespace Game1000
                 velocity = Vector2.Zero;
         }
 
-        private void ApplyMaxSpeed(float elapsed)
+        private void ApplyMaxSpeed()
         {
             if (velocity.Length() > maxSpeed)
             {
@@ -88,7 +89,7 @@ namespace Game1000
         //    }
         //}
 
-        public void Collide(Disk disk)
+        public void Collide(Disk disk, int colCount = 1)
         {
             if (!IfIntersects(disk) || !ifCollides || !disk.ifCollides)
                 return;
@@ -113,6 +114,18 @@ namespace Game1000
                 }
                 else
                 {
+                    //Vector2 center = (position * mass + disk.position * disk.mass) / (mass + disk.mass);
+                    //float reducedMass = mass * disk.mass / (mass + disk.mass);
+                    //Vector2 positionExchange = (reducedMass * (radius + disk.radius)) * direction;
+                    //position = center + positionExchange / mass;
+                    //disk.position = center - positionExchange / disk.mass;
+                    //float impSpeed = Vector2.Dot(direction, velocity), diskImpSpeed = Vector2.Dot(direction, disk.velocity);
+                    //Vector2 finalVel = direction * (mass * impSpeed + disk.mass * diskImpSpeed) / (mass + disk.mass);
+                    //force += (-direction * impSpeed + finalVel) * mass / colCount;
+                    //disk.force += (-direction * diskImpSpeed + finalVel) * disk.mass / colCount;
+
+
+
                     Vector2 center = (position * mass + disk.position * disk.mass) / (mass + disk.mass);
                     float reducedMass = mass * disk.mass / (mass + disk.mass);
                     Vector2 positionExchange = reducedMass * (radius + disk.radius) * direction;
@@ -120,8 +133,8 @@ namespace Game1000
                     disk.position = center - positionExchange / disk.mass;
                     float impSpeed = Vector2.Dot(direction, velocity), diskImpSpeed = Vector2.Dot(direction, disk.velocity);
                     Vector2 momentumExchange = reducedMass * 2 * (diskImpSpeed - impSpeed) * direction;
-                    force += momentumExchange;
-                    disk.force -= momentumExchange;
+                    force += momentumExchange / colCount;
+                    disk.force -= momentumExchange / colCount;
                 }
             }
 

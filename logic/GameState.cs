@@ -1,16 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Game1000
 {
     public class GameState
     {
-        private List<Obstacle> obstacles;
-        private List<Player> players;
-        private List<Bullet> bullets;
-        private Arena arena;
+        private readonly List<Obstacle> obstacles;
+        private readonly RubberBand rubberBand;
+        private readonly List<Player> players;
+        private readonly List<Bullet> bullets;
+        private readonly Arena arena;
         
         public GameState(List<Player> ps)
         {
@@ -21,14 +21,19 @@ namespace Game1000
             bullets = new List<Bullet>();
             arena = new Arena(Color.White);
             arena.AssignPositions(players);
-            List<Vector2> vertices = new List<Vector2>();
-            vertices.Add(new Vector2(0, 0));
-            vertices.Add(new Vector2(20, 100));
-            vertices.Add(new Vector2(100, 0));
-            vertices.Add(new Vector2(0, -100));
-            vertices.Add(new Vector2(-100, 0));
-            obstacles = new List<Obstacle>();
-            obstacles.Add(new Polygon(vertices, 32, Color.Yellow));
+            List<Vector2> vertices = new List<Vector2>
+            {
+                new Vector2(0, 0),
+                new Vector2(20, 100),
+                new Vector2(100, 0),
+                new Vector2(0, -100),
+                new Vector2(-100, 0)
+            };
+            obstacles = new List<Obstacle>
+            {
+                new Polygon(vertices, 32, Color.Yellow)
+            };
+            rubberBand = new RubberBand(new Vector2(-200, -200), new Vector2(0, 0), 8, 20000, 100, Color.Blue);
         }
 
         public void Update(GameTime gameTime)
@@ -43,6 +48,8 @@ namespace Game1000
             // Update position of bullets
             foreach (Bullet bullet in bullets)
                 bullet.Update(elapsed);
+
+            rubberBand.Update(elapsed);
 
             // Handle collisions of 2 players
             // (Current implementation may cause problems for >2 players)
@@ -65,6 +72,9 @@ namespace Game1000
             foreach (Obstacle obstacle in obstacles)
                 foreach (Player player in players)
                     obstacle.Collide(player);
+
+            foreach (Player player in players)
+                rubberBand.Collide(player);
 
             // Handle collisions between Obstacle and Bullet
             foreach (Bullet bullet in bullets)
@@ -104,6 +114,8 @@ namespace Game1000
 
             foreach (Obstacle obstacle in obstacles)
                 obstacle.Draw(spriteBatch);
+
+            rubberBand.Draw(spriteBatch);
 
             spriteBatch.End();
         }
