@@ -10,6 +10,9 @@ namespace Game1000
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        bool wasReady;
+        MapCreateState map;
+
         GameState game;
 
         Camera camera;
@@ -20,8 +23,9 @@ namespace Game1000
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = C.screenWidth;
             graphics.PreferredBackBufferHeight = C.screenHeight;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             IsMouseVisible = true;
+            wasReady = false;
         }
 
         protected override void Initialize()
@@ -37,6 +41,8 @@ namespace Game1000
             camera = new Camera();
             game.AddPlayer(new Player(new LocalControls(), 32, Color.Red, true, false));
             game.AddPlayer(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 40, Color.Green, false, true));
+
+            map = new MapCreateState(new LocalControls());
         }
 
         protected override void UnloadContent()
@@ -48,7 +54,20 @@ namespace Game1000
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            game.Update(gameTime);
+            
+            if (map.isReady)
+            {
+                if (!wasReady)
+                {
+                    game.AddObtacles(map.Read());
+                }
+                wasReady = map.isReady;
+                game.Update(gameTime);
+            }
+            else
+            {
+                map.Update();
+            }
 
             base.Update(gameTime);
         }
@@ -57,8 +76,13 @@ namespace Game1000
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             camera.BeginDraw(spriteBatch);
-            game.Draw(spriteBatch);
+
+            if (map.isReady)
+                game.Draw(spriteBatch);
+            else
+                map.Draw(spriteBatch);
             
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
