@@ -31,9 +31,15 @@ namespace Game1000
             };
             obstacles = new List<Obstacle>
             {
-                new Polygon(vertices, 32, Color.Yellow)
+                //new Polygon(vertices, 32, Color.Yellow)
             };
             rubberBand = new RubberBand(new Vector2(-200, -200), new Vector2(0, 0), 8, 20000, 100, Color.Blue);
+        }
+
+        public void AddObtacles(List<Obstacle> obst)
+        {
+            foreach (Obstacle obstacle in obst)
+                obstacles.Add(obstacle);
         }
 
         public void Update(GameTime gameTime)
@@ -116,8 +122,6 @@ namespace Game1000
                 obstacle.Draw(spriteBatch);
 
             rubberBand.Draw(spriteBatch);
-
-            spriteBatch.End();
         }
 
         public void AddPlayer(Player p){
