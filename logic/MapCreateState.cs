@@ -25,7 +25,7 @@ namespace Game1000
         // Press F to finish the Polygon (otherwise your points won't be saved)
         // When done drawing, press Enter
 
-        public MapCreateState(Controls controls)
+        public MapCreateState(Controls controls, bool ifCreate)
         {
             this.controls = controls;
             obstacles = new List<Obstacle>();
@@ -36,7 +36,7 @@ namespace Game1000
             wasD = false;
             wasP = false;
             isReady = false;
-            ifWrites = false;
+            isReady = !ifCreate;
             diskCol = Color.Yellow;
             lineCol = Color.Blue;
             rubCol = Color.Orange;
@@ -66,7 +66,7 @@ namespace Game1000
                 if (parts[0] == "P")
                 {
                     List<Vector2> vertices = new List<Vector2>();
-                    for (int i = 1; i < parts.Length; i += 2)
+                    for (int i = 1; i < parts.Length - 1; i += 2)
                     {
                         vertices.Add(new Vector2(Convert.ToInt32(parts[i]), Convert.ToInt32(parts[i + 1])));
                     }
