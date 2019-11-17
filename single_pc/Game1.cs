@@ -42,7 +42,8 @@ namespace Game1000
             game.AddPlayer(new Player(new LocalControls(), 32, Color.Red, true, false));
             game.AddPlayer(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 40, Color.Green, false, true));
 
-            map = new MapCreateState(new LocalControls());
+            // if you want to create your map, second variable must be 'true'
+            map = new MapCreateState(new LocalControls(), false);
         }
 
         protected override void UnloadContent()
