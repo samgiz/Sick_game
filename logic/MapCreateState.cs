@@ -18,7 +18,7 @@ namespace Game1000
         private StreamReader readFile;
         private readonly Color diskCol, lineCol, rubCol;
 
-        String mapPath = System.IO.Directory.GetCurrentDirectory() + "/../map.txt";
+        String mapPath = AppDomain.CurrentDomain.BaseDirectory + "../../../../map.txt";
 
         // If you want lo load the map from file, press Enter
         // If not, press w to enable changing the map
@@ -51,7 +51,9 @@ namespace Game1000
                 return obstacles;
             }
             List<Obstacle> obst = new List<Obstacle>();
+            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
             readFile = new StreamReader(mapPath);
+
             while (true)
             {
                 string line;
