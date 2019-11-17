@@ -18,6 +18,8 @@ namespace Game1000
         private StreamReader readFile;
         private readonly Color diskCol, lineCol, rubCol;
 
+        String mapPath = System.IO.Directory.GetCurrentDirectory() + "/../map.txt";
+
         // If you want lo load the map from file, press Enter
         // If not, press w to enable changing the map
         // Press to create DiskObst
@@ -49,7 +51,7 @@ namespace Game1000
                 return obstacles;
             }
             List<Obstacle> obst = new List<Obstacle>();
-            readFile = new StreamReader("../../../../map.txt");
+            readFile = new StreamReader(mapPath);
             while (true)
             {
                 string line;
@@ -81,7 +83,7 @@ namespace Game1000
         public void Write()
         {
             ifWrites = true;
-            writeFile = new StreamWriter("../../../../map.txt");
+            writeFile = new StreamWriter(mapPath);
         }
 
         public void Update()
