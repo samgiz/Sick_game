@@ -10,8 +10,8 @@ namespace Game1000
         public Vector2 force;
         public bool ifCollides;
 
-        private Vector2 velocity;
-        private readonly float maxSpeed;
+        public Vector2 velocity;
+        public readonly float maxSpeed;
 
         private const float gravityConst = 100, frictionCoeff = 0.001f, dragCoeff = 10f, airDensity = 0.5f;
 

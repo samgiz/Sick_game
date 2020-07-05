@@ -159,6 +159,7 @@ namespace Game1000
             game.Draw(spriteBatch);
             
             base.Draw(gameTime);
+            spriteBatch.End();
         }
     }
 }
