@@ -16,7 +16,6 @@ namespace Game1000
             this.disk2 = disk2;
             this.length = length;
             this.color = color;
-            segment = new Segment(disk1.position, disk2.position, disk1.radius * 2, color);
             springConst = 100000;
             //maxForce = 10000;
         }

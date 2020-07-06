@@ -45,7 +45,8 @@ namespace Game1000
                 obstacle.Draw();
 
             // draw anything else
-            // rubberBand.Draw();
+            // [TODO: add rubberBands as just another obstacle, that's what they are]
+            game.rubberBand.Draw();
 
             C.spriteBatch.End();
         }

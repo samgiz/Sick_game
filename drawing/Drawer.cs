@@ -1,4 +1,4 @@
-// the basic drawer class. Draws nothing
+// the basic drawer interface
 namespace Drawing{
     public interface Drawer{
         void DrawDisk(dynamic parameters);
