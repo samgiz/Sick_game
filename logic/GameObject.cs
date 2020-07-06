@@ -35,7 +35,7 @@ namespace Game1000
             Color curColor = color;
             if (!ifCollides)
                 curColor *= 0.5f;
-            C.drawer.DrawDisk(new {position, curColor, origin, scale});
+            C.drawer.DrawDisk(new {position, color=curColor, origin, scale});
         }
     }
 }

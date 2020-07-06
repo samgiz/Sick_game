@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Drawing;
 
 namespace Game1000
 {
@@ -16,6 +17,7 @@ namespace Game1000
         GameState game;
 
         Camera camera;
+        GraphicsHandler gHandler;
 
         public Game1()
         {
@@ -36,8 +38,10 @@ namespace Game1000
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            C.spriteBatch = spriteBatch;
             C.Content = Content;
             game = new GameState(new List<Player>());
+            gHandler = new StandardGraphicsHandler(game);
             camera = new Camera();
             game.AddPlayer(new Player(new LocalControls(), 32, Color.Red, true, false));
             game.AddPlayer(new Player(new LocalControls(Keys.Up, Keys.Left, Keys.Down, Keys.Right), 40, Color.Green, false, true));
@@ -76,14 +80,15 @@ namespace Game1000
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            camera.BeginDraw(spriteBatch);
+            
 
             if (map.isReady)
-                game.Draw(spriteBatch);
-            else
-                map.Draw(spriteBatch);
-            
-            spriteBatch.End();
+                gHandler.Draw();
+            else{
+                camera.BeginDraw(spriteBatch);
+                map.Draw();
+                spriteBatch.End();
+            }
             base.Draw(gameTime);
         }
     }

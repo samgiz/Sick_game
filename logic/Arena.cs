@@ -35,7 +35,7 @@ namespace Game1000
 
         public void Draw()
         {
-            C.drawer.DrawDisk(new { 
+            C.drawer.DrawBigDisk(new { 
                 position = Vector2.Zero,
                 color = color,
                 origin = origin,

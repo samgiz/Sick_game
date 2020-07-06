@@ -17,7 +17,7 @@ namespace Drawing{
         }
         public void DrawDisk(dynamic p){
             try{
-                C.spriteBatch.Draw(bigDiskImage, p.position, null, p.color, 0, p.origin, p.scale, SpriteEffects.None, 0);
+                C.spriteBatch.Draw(diskImage, p.position, null, p.color, 0, p.origin, p.scale, SpriteEffects.None, 0);
             } catch {
                 throw new System.Exception("Disk drawer did not receive the required properties");
             }
@@ -30,6 +30,14 @@ namespace Drawing{
                 C.spriteBatch.Draw(diskImage, p.vert2, null, p.color, 0, diskOrigin, p.diskScale, SpriteEffects.None, 0);
             } catch {
                 throw new System.Exception("Segment drawer did not receive the required properties");
+            }
+        }
+        // [TODO: refactor code so this method is not needed]
+        public void DrawBigDisk(dynamic p){
+            try{
+                C.spriteBatch.Draw(bigDiskImage, p.position, null, p.color, 0, p.origin, p.scale, SpriteEffects.None, 0);
+            } catch {
+                throw new System.Exception("Disk drawer did not receive the required properties");
             }
         }
     }
