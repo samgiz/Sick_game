@@ -205,7 +205,6 @@ namespace Game1000
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch = new SpriteBatch(GraphicsDevice);
             C.spriteBatch = spriteBatch;
             gHandler.Draw();
             base.Draw(gameTime);

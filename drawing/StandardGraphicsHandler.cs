@@ -45,7 +45,7 @@ namespace Game1000
                 obstacle.Draw();
 
             // draw anything else
-            // rubberBand.Draw(spriteBatch);
+            // rubberBand.Draw();
 
             C.spriteBatch.End();
         }

@@ -5,6 +5,7 @@ namespace Game1000
 {
     // General controls class to keep track of a players keyboard and mouse state
     // By default the Mouse and Keyboard state can be changed manually to allow remote execution of
+    // [TODO: fix annoying warnings]
     public class Controls
     {
         public virtual bool up {get; set;} = false;

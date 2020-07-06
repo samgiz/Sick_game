@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
 using static Networking.Utilities;
+using Drawing;
 
 namespace Game1000
 {
@@ -24,6 +25,7 @@ namespace Game1000
         Controls previousControls;
 
         Camera camera;
+        GraphicsHandler gHandler;
 
         public Game1()
         {
@@ -53,6 +55,7 @@ namespace Game1000
             spriteBatch = new SpriteBatch(GraphicsDevice);
             C.Content = Content;
             game = new GameState(new List<Player>());
+            gHandler = new StandardGraphicsHandler(game);
             controls = new Dictionary<long, Controls>();
             players = new Dictionary<long, Player>(); 
 
@@ -148,18 +151,15 @@ namespace Game1000
 
             // Update game after receiving input changes
             game.Update(gameTime);
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            camera.BeginDraw(spriteBatch);
-            game.Draw(spriteBatch);
-            
+            C.spriteBatch = spriteBatch;
+            gHandler.Draw();
             base.Draw(gameTime);
-            spriteBatch.End();
         }
     }
 }
