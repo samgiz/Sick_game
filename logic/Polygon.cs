@@ -23,10 +23,10 @@ namespace Game1000
                 segment.Collide(disk);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             foreach (Segment segment in segments)
-                segment.Draw(spriteBatch);
+                segment.Draw();
         }
     }
 }

@@ -31,9 +31,6 @@ namespace Game1000
             b = Vector2.Dot(a, vert1);
             this.color = color;
 
-            pixelImage = C.LoadImage("pixel");
-            pixelOrigin = C.ImageOrigin(pixelImage);
-            midPos = (vert1 + vert2) / 2;
             pixelScale = new Vector2(lineWidth, Vector2.Distance(vert1, vert2));
             angle = (float)Math.Atan2(a.Y, a.X);
 
@@ -42,11 +39,9 @@ namespace Game1000
             diskScale = 2 * radius / diskImage.Width;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            spriteBatch.Draw(pixelImage, midPos, null, color, angle, pixelOrigin, pixelScale, SpriteEffects.None, 0);
-            spriteBatch.Draw(diskImage, vert1, null, color, 0, diskOrigin, diskScale, SpriteEffects.None, 0);
-            spriteBatch.Draw(diskImage, vert2, null, color, 0, diskOrigin, diskScale, SpriteEffects.None, 0);
+            C.drawer.DrawSegment(new {vert1, vert2, color, pixelScale, diskScale, angle});
         }
 
         // Returns the distance between line and disk

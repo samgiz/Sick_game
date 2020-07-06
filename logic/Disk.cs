@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Drawing;
 
 namespace Game1000
 {
@@ -147,9 +148,9 @@ namespace Game1000
         public bool IfIntersects(Disk disk)
             => Vector2.Distance(position, disk.position) < radius + disk.radius;
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            base.Draw(spriteBatch, ifCollides);
+            base.Draw(ifCollides);
         }
     }
 }

@@ -41,12 +41,12 @@ namespace Game1000
         //    disk2.Collide(disk);
         //}
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             segment = new Segment(disk1.position, disk2.position, disk1.radius * 2, color);
-            segment.Draw(spriteBatch);
-            disk1.Draw(spriteBatch);
-            disk2.Draw(spriteBatch);
+            segment.Draw();
+            disk1.Draw();
+            disk2.Draw();
         }
     }
 }

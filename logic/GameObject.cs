@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Drawing;
 
 namespace Game1000
 {
@@ -29,12 +30,12 @@ namespace Game1000
                 scale = 1;
         }
 
-        protected void Draw(SpriteBatch spriteBatch, bool ifCollides = true)
+        protected void Draw(bool ifCollides = true)
         {
             Color curColor = color;
             if (!ifCollides)
                 curColor *= 0.5f;
-            spriteBatch.Draw(image, position, null, curColor, 0, origin, scale, SpriteEffects.None, 0);
+            C.drawer.DrawDisk(new {position, curColor, origin, scale});
         }
     }
 }

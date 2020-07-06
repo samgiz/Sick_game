@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Drawing;
 
 namespace Game1000
 {
@@ -6,6 +7,6 @@ namespace Game1000
     {
         void Collide(Disk disk);
 
-        void Draw(SpriteBatch spriteBatch);
+        void Draw();
     }
 }

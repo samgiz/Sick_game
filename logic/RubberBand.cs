@@ -54,10 +54,10 @@ namespace Game1000
                 d.Collide(disk, colCount);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             foreach (Spring spring in springs)
-                spring.Draw(spriteBatch);
+                spring.Draw();
         }
     }
 }

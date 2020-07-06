@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Drawing;
 
 namespace Game1000
 {
@@ -13,7 +14,6 @@ namespace Game1000
         private readonly float decreasePerSec;
         private readonly Texture2D image;
         private Color color;
-
         public Arena(Color color)
         {
             this.color = color;
@@ -26,15 +26,21 @@ namespace Game1000
 
         public void Update(float elapsed)
         {
+            // use line below if we want the Arena to shrink
             // radius -= decreasePerSec * elapsed;
             if (radius < 0)
                 radius = 0;
             scale = 2 * radius / image.Width;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            spriteBatch.Draw(image, Vector2.Zero, null, color, 0, origin, scale, SpriteEffects.None, 0);
+            C.drawer.DrawDisk(new { 
+                position = Vector2.Zero,
+                color = color,
+                origin = origin,
+                scale = scale 
+            });
         }
 
         // Check whether a point is inside the arena
@@ -48,10 +54,10 @@ namespace Game1000
 
         public void AssignPositions(List<Player> ps){
             for(int i = 0; i < ps.Count; i++){
-                // Make this assign positions in a circle
+                // [TODO: ]Make this assign positions in a circle
                 ps[i].position = new Vector2(-500+i*200, 0);
                 // Override players' speed to avoid strange behaviour
-                //ps[i].velocity = Vector2.Zero;
+                ps[i].velocity = Vector2.Zero;
             }
         }
     }

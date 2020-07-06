@@ -2,15 +2,23 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Drawing;
 
 namespace Game1000
 {
     public static class C
     {
+        public static readonly int screenWidth, screenHeight;
+        public static Matrix transform;
         public static ContentManager Content;
+        public static Texture2D circle_image;
+        public static SpriteBatch spriteBatch;
+        public static Drawer drawer;
 
         static C()
         {
+            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         }
 
         public static Texture2D LoadImage(string name)

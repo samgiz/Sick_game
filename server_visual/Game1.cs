@@ -11,6 +11,7 @@ namespace Game1000
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+        GraphicsHandler gHandler;
         SpriteBatch spriteBatch;
 
         GameState game;
@@ -54,8 +55,10 @@ namespace Game1000
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            C.spriteBatch = spriteBatch;
             C.Content = Content;
             game = new GameState(new List<Player>());
+            gHandler = new StandardGraphicsHandler(game);
             controls = new Dictionary<long, Controls>();
             players = new Dictionary<long, Player>();
             lastUpdate = DateTime.MinValue;
@@ -202,11 +205,10 @@ namespace Game1000
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            camera.BeginDraw(spriteBatch);
-            game.Draw(spriteBatch);
-            
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            C.spriteBatch = spriteBatch;
+            gHandler.Draw();
             base.Draw(gameTime);
-            spriteBatch.End();
         }
     }
 }

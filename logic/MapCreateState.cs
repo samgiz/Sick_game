@@ -161,12 +161,12 @@ namespace Game1000
         //    }
         //}
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             foreach (Obstacle obstacle in tempObst)
-                obstacle.Draw(spriteBatch);
+                obstacle.Draw();
             foreach (Obstacle obstacle in obstacles)
-                obstacle.Draw(spriteBatch);
+                obstacle.Draw();
 
         }
     }

@@ -1,16 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Game1000
 {
     public class GameState
     {
-        private readonly List<Obstacle> obstacles;
-        private readonly RubberBand rubberBand;
-        private readonly List<Player> players;
-        private readonly List<Bullet> bullets;
-        private readonly Arena arena;
+        public readonly List<Obstacle> obstacles;
+        public readonly RubberBand rubberBand;
+        public readonly List<Player> players;
+        public readonly List<Bullet> bullets;
+        public readonly Arena arena;
         
         public GameState(List<Player> ps)
         {
@@ -106,22 +107,6 @@ namespace Game1000
             // Update the arena
             // Currently this means shrinking the size
             arena.Update(elapsed);
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            arena.Draw(spriteBatch);
-
-            foreach (Player player in players)
-                player.Draw(spriteBatch);
-
-            foreach (Bullet bullet in bullets)
-                bullet.Draw(spriteBatch);
-
-            foreach (Obstacle obstacle in obstacles)
-                obstacle.Draw(spriteBatch);
-
-            rubberBand.Draw(spriteBatch);
         }
 
         public void AddPlayer(Player p){
