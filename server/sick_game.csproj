@@ -9,6 +9,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Lidgren.Network" Version="2012.2.15.2"/>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="*"/>
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="*"/>
   </ItemGroup>
 </Project>

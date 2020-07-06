@@ -67,13 +67,13 @@ namespace Game1000
                     game.AddObtacles(map.Read());
                 }
                 wasReady = map.isReady;
-                game.Update(gameTime);
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                game.Update(elapsed);
             }
             else
             {
                 map.Update();
             }
-
             base.Update(gameTime);
         }
 

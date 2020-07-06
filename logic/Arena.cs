@@ -19,9 +19,6 @@ namespace Game1000
             this.color = color;
             radius = 540;
             decreasePerSec = 10;
-            image = C.Content.Load<Texture2D>("big disk");
-            origin = new Vector2(image.Width * 0.5f, image.Height * 0.5f);
-            scale = 2 * radius / image.Width;
         }
 
         public void Update(float elapsed)
@@ -30,16 +27,14 @@ namespace Game1000
             // radius -= decreasePerSec * elapsed;
             if (radius < 0)
                 radius = 0;
-            scale = 2 * radius / image.Width;
         }
 
         public void Draw()
         {
             C.drawer.DrawBigDisk(new { 
                 position = Vector2.Zero,
-                color = color,
-                origin = origin,
-                scale = scale 
+                color,
+                radius
             });
         }
 

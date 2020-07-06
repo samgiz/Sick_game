@@ -6,7 +6,7 @@ using System;
 namespace Drawing{
     public class NormalDrawer : Drawer {
         Texture2D bigDiskImage, diskImage, pixelImage;
-        Vector2 diskOrigin, pixelOrigin;
+        Vector2 bigDiskOrigin, diskOrigin, pixelOrigin;
 
         public NormalDrawer(){
             bigDiskImage = C.LoadImage("big disk");
@@ -14,10 +14,19 @@ namespace Drawing{
             pixelImage = C.LoadImage("pixel");
             diskOrigin = C.ImageOrigin(diskImage);
             pixelOrigin = C.ImageOrigin(pixelImage);
+            bigDiskOrigin = C.ImageOrigin(bigDiskImage);
         }
         public void DrawDisk(dynamic p){
             try{
-                C.spriteBatch.Draw(diskImage, p.position, null, p.color, 0, p.origin, p.scale, SpriteEffects.None, 0);
+                // does not work without the line below
+                float? width = p.width;
+                // [TODO: make this less ugly]
+                float scale;
+                if (width.HasValue)
+                    scale = (float)width / diskImage.Width;
+                else
+                    scale = 1;
+                C.spriteBatch.Draw(diskImage, p.position, null, p.color, 0, diskOrigin, scale, SpriteEffects.None, 0);
             } catch {
                 throw new System.Exception("Disk drawer did not receive the required properties");
             }
@@ -35,7 +44,9 @@ namespace Drawing{
         // [TODO: refactor code so this method is not needed]
         public void DrawBigDisk(dynamic p){
             try{
-                C.spriteBatch.Draw(bigDiskImage, p.position, null, p.color, 0, p.origin, p.scale, SpriteEffects.None, 0);
+                // [TODO: find a way to not have this be so ugly]
+                float scale = 2 * p.radius / bigDiskImage.Width;
+                C.spriteBatch.Draw(bigDiskImage, p.position, null, p.color, 0, bigDiskOrigin, scale, SpriteEffects.None, 0);
             } catch {
                 throw new System.Exception("Disk drawer did not receive the required properties");
             }

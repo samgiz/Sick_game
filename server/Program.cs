@@ -1,35 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using static Networking.Utilities;
 
 namespace Game1000
 {
     public class Program
     {
-        GameState game;
+        static GameState game;
 
-        NetServer server;
+        static NetServer server;
 
-        Dictionary<long, Controls> controls;
-        Dictionary<long, Player> players;
+        static Dictionary<long, Controls> controls;
+        static Dictionary<long, Player> players;
 
         // Denotes the max acceptable time interval without updating position of a player
         // In milliseconds
-        int updateInterval = 250;
+        static int updateInterval = 250;
 
         // Denotes the last update of all players positions
-        DateTime lastUpdate;
+        static DateTime lastUpdate;
 
-        Camera camera;
-        [STAThread]
-        public void Main()
+        static void Main()
         {
-            game = new GameState(new List<Player>());
+            DateTime current = DateTime.Now;
+            GameState game = new GameState(new List<Player>());
             controls = new Dictionary<long, Controls>();
             players = new Dictionary<long, Player>();
             lastUpdate = DateTime.MinValue;
-            camera = new Camera();
 
             NetPeerConfiguration config = new NetPeerConfiguration("sick_game");
             config.Port = 14242;
@@ -37,9 +36,8 @@ namespace Game1000
             // config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             server = new NetServer(config);
             server.Start();
-
+            NetIncomingMessage msg;
             while(true){
-                NetIncomingMessage msg;
                 while ((msg = server.ReadMessage()) != null)
                 {
                     switch (msg.MessageType)
@@ -63,7 +61,7 @@ namespace Game1000
                                 controls[msg.SenderConnection.RemoteUniqueIdentifier] = c;
 
                                 // Add player to game
-                                Player p = new Player(c, 32, null, false, false);
+                                Player p = new Player(c, 32, Color.Red, false, false);
                                 players[msg.SenderConnection.RemoteUniqueIdentifier] = p;
                                 game.AddPlayer(p);
 
@@ -159,6 +157,10 @@ namespace Game1000
                         server.SendMessage(om, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
                     }
                 }
+                DateTime now = DateTime.Now;
+                float elapsed = (float)(current - now).TotalSeconds;
+                current = now;
+                game.Update(elapsed);
             }
         }
     }

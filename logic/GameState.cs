@@ -43,11 +43,8 @@ namespace Game1000
                 obstacles.Add(obstacle);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(float elapsed)
         {
-            // Elapsed time since the last update
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             // Update the position of each player based on the time that has elapsed
             foreach (Player player in players)
                 player.Update(elapsed, bullets);

@@ -150,7 +150,8 @@ namespace Game1000
             }
 
             // Update game after receiving input changes
-            game.Update(gameTime);
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            game.Update(elapsed);
             base.Update(gameTime);
         }
 
