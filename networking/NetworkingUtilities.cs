@@ -1,7 +1,6 @@
 using Lidgren.Network;
 using Game1000;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace Networking{
     class Utilities{

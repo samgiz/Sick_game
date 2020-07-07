@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Drawing;
-
-namespace Game1000
+﻿namespace Game1000
 {
     public interface Obstacle
     {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace Game1000
@@ -15,9 +14,7 @@ namespace Game1000
         // radius around the line defining the boundary
         private readonly float radius;
 
-        // for drawing
-        private readonly Texture2D pixelImage, diskImage;
-        private readonly Vector2 midPos, pixelOrigin, pixelScale, diskOrigin;
+        private readonly Vector2 midPos, pixelScale;
         private readonly float angle, diskScale;
 
         public Segment(Vector2 vert1, Vector2 vert2, float lineWidth, Color color)
@@ -33,15 +30,11 @@ namespace Game1000
 
             pixelScale = new Vector2(lineWidth, Vector2.Distance(vert1, vert2));
             angle = (float)Math.Atan2(a.Y, a.X);
-
-            diskImage = C.LoadImage("disk");
-            diskOrigin = C.ImageOrigin(diskImage);
-            diskScale = 2 * radius / diskImage.Width;
         }
 
         public void Draw()
         {
-            C.drawer.DrawSegment(new {vert1, vert2, color, pixelScale, diskScale, angle});
+            C.drawer.DrawSegment(new {vert1, vert2, color, radius, angle});
         }
 
         // Returns the distance between line and disk
