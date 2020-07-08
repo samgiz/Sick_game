@@ -36,9 +36,9 @@ namespace Drawing{
                 Vector2 midPos = (p.vert1 + p.vert2) / 2;
                 float diskScale = 2 * p.radius / diskImage.Width;
                 Vector2 pixelScale = new Vector2(p.radius*2, Vector2.Distance(p.vert1, p.vert2));
-                C.spriteBatch.Draw(pixelImage, midPos, null, p.color, p.angle, pixelOrigin, p.pixelScale, SpriteEffects.None, 0);
-                C.spriteBatch.Draw(diskImage, p.vert1, null, p.color, 0, diskOrigin, p.diskScale, SpriteEffects.None, 0);
-                C.spriteBatch.Draw(diskImage, p.vert2, null, p.color, 0, diskOrigin, p.diskScale, SpriteEffects.None, 0);
+                C.spriteBatch.Draw(pixelImage, midPos, null, p.color, p.angle, pixelOrigin, pixelScale, SpriteEffects.None, 0);
+                C.spriteBatch.Draw(diskImage, p.vert1, null, p.color, 0, diskOrigin, diskScale, SpriteEffects.None, 0);
+                C.spriteBatch.Draw(diskImage, p.vert2, null, p.color, 0, diskOrigin, diskScale, SpriteEffects.None, 0);
             } catch {
                 throw new System.Exception("Segment drawer did not receive the required properties");
             }

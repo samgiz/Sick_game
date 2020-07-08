@@ -47,7 +47,7 @@ namespace Game1000
             client.Start();
 
             // Connect to server
-            client.Connect("localhost", 14242, client.CreateMessage());
+            client.Connect("sick-game-server.herokuapp.com", 14242, client.CreateMessage());
         }
 
         protected override void LoadContent()
