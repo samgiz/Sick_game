@@ -31,7 +31,7 @@ namespace Game1000
             lastUpdate = DateTime.MinValue;
 
             NetPeerConfiguration config = new NetPeerConfiguration("sick_game");
-            config.Port = 14242;
+            config.Port = 80;
             // For some reason this does not work when ConnectionApproval is enabled
             // config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             server = new NetServer(config);
